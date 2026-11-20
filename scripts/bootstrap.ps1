@@ -14,6 +14,15 @@ function Has-Version($file, $version) {
     $actual = & $file --version
     return ($LASTEXITCODE -eq 0 -and "$actual" -eq $version)
 }
+function Get-Sha256([string]$path) {
+    $stream = [IO.File]::OpenRead((Convert-Path -LiteralPath $path))
+    try {
+        $sha = [Security.Cryptography.SHA256]::Create()
+        try {
+            return [BitConverter]::ToString($sha.ComputeHash($stream)).Replace('-', '')
+        } finally { $sha.Dispose() }
+    } finally { $stream.Dispose() }
+}
 function Assert-Ports {
     foreach ($port in 3001,5173) {
         $listener = [Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback, $port)
@@ -37,7 +46,7 @@ function Install-Node($stage, $destination) {
     if ($checks -notmatch $pattern) { throw "Checksum oficial ausente para $name.zip" }
     $expected = $Matches[1]
     Invoke-WebRequest "$base/$name.zip" -UseBasicParsing -OutFile $archive -TimeoutSec 300
-    if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash -ne $expected) { throw 'SHA-256 incorrecto. Descarga rechazada.' }
+    if ((Get-Sha256 $archive) -ne $expected) { throw 'SHA-256 incorrecto. Descarga rechazada.' }
     Run "$env:SystemRoot\System32\tar.exe" @('-xf',$archive,'-C',$stage)
     $extracted = Join-Path $stage $name
     if (!(Has-Version (Join-Path $extracted 'node.exe') "v$nodeVersion")) { throw 'Node extraido incompatible.' }
@@ -103,7 +112,7 @@ try {
         Write-Host "Node $nodeVersion [$node] | npm $npmVersion [$npm]"
         Run $node @('scripts/verify-runtime.mjs')
         $inputs = @('package-lock.json','package.json','.npmrc') + @(Get-ChildItem apps/*/package.json,packages/*/package.json | Sort-Object FullName | ForEach-Object FullName)
-        $signature = (@($nodeVersion,$npmVersion,$arch) + @($inputs | ForEach-Object { (Get-FileHash -LiteralPath $_).Hash })) -join ':'
+        $signature = (@($nodeVersion,$npmVersion,$arch) + @($inputs | ForEach-Object { Get-Sha256 $_ })) -join ':'
         $stamp = Join-Path $root 'node_modules/.fiavl-install'
         if (!(Test-Path $stamp) -or [IO.File]::ReadAllText($stamp) -ne $signature -or
             !(Test-Path node_modules/.package-lock.json) -or !(Test-Path node_modules/.bin/vite.cmd)) {

@@ -1,0 +1,292 @@
+{
+  "venues": [
+    {
+      "id": "teatro-del-sur",
+      "name": "Teatro del Sur",
+      "address": "Calle del Telón 12",
+      "description": "Sala de caja negra con graderío cercano al escenario.",
+      "accessibilityNotes": "Entrada a nivel y dos espacios para silla de ruedas.",
+      "image": "/art/teatro.svg"
+    },
+    {
+      "id": "patio-del-rio",
+      "name": "Patio del Río",
+      "address": "Paseo del Río 8",
+      "description": "Patio abierto para encuentros de música y danza.",
+      "accessibilityNotes": "Acceso por rampa desde el paseo.",
+      "image": "/art/teatro.svg"
+    },
+    {
+      "id": "casa-del-eco",
+      "name": "Casa del Eco",
+      "address": "Pasaje del Eco 4",
+      "description": "Taller de experimentación sonora en una casa de patio.",
+      "accessibilityNotes": "El taller se realiza en planta baja.",
+      "image": "/art/teatro.svg"
+    },
+    {
+      "id": "plaza-del-viento",
+      "name": "Plaza del Viento",
+      "address": "Plazoleta del Viento s/n",
+      "description": "Explanada peatonal para intervenciones colectivas.",
+      "accessibilityNotes": "Suelo de adoquín y bancos en el perímetro.",
+      "image": "/art/teatro.svg"
+    },
+    {
+      "id": "sala-la-trama",
+      "name": "Sala La Trama",
+      "address": "Calle del Hilo 19",
+      "description": "Espacio pequeño de creación escénica y ensayo.",
+      "accessibilityNotes": "Acceso sin escalones y baño adaptado.",
+      "image": "/art/teatro.svg"
+    }
+  ],
+  "artists": [
+    {
+      "id": "colectivo-umbral",
+      "name": "Colectivo Umbral",
+      "bio": "Investiga el movimiento de grupos en espacios cotidianos.",
+      "country": "Ecuador",
+      "discipline": "Danza",
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "ines-luz",
+      "name": "Inés Luz",
+      "bio": "Compone piezas con voces grabadas y cuerdas andinas.",
+      "country": "Ecuador",
+      "discipline": "Música",
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "taller-nudo",
+      "name": "Taller Nudo",
+      "bio": "Construye personajes con papel y objetos encontrados.",
+      "country": "Perú",
+      "discipline": "Teatro",
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "duo-bruma",
+      "name": "Dúo Bruma",
+      "bio": "Combina acrobacia de suelo y percusión en vivo.",
+      "country": "Colombia",
+      "discipline": "Circo",
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "lara-sur",
+      "name": "Lara Sur",
+      "bio": "Trabaja con relatos orales y sombras proyectadas.",
+      "country": "Argentina",
+      "discipline": "Narración",
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "ensamble-cauce",
+      "name": "Ensamble Cauce",
+      "bio": "Reúne instrumentos de viento y paisajes sonoros.",
+      "country": "Ecuador",
+      "discipline": "Música",
+      "image": "/art/danza.svg"
+    }
+  ],
+  "events": [
+    {
+      "id": "umbral-de-luz",
+      "title": "Umbral de luz",
+      "description": "Una compañía dibuja caminos de luz con el cuerpo sobre un escenario en penumbra.",
+      "category": "Danza",
+      "startAt": "2026-11-12T18:00:00-05:00",
+      "endAt": "2026-11-12T20:00:00-05:00",
+      "venueId": "teatro-del-sur",
+      "artistIds": [
+        "colectivo-umbral"
+      ],
+      "priceCents": 500,
+      "capacity": 3,
+      "reservable": true,
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "el-rio-suena",
+      "title": "El río suena",
+      "description": "Un concierto al aire libre entre cuerdas, voces y sonidos del agua.",
+      "category": "Música",
+      "startAt": "2026-11-12T19:00:00-05:00",
+      "endAt": "2026-11-12T21:00:00-05:00",
+      "venueId": "patio-del-rio",
+      "artistIds": [
+        "ines-luz",
+        "ensamble-cauce"
+      ],
+      "priceCents": 0,
+      "capacity": 80,
+      "reservable": false,
+      "image": "/art/musica.svg"
+    },
+    {
+      "id": "papel-en-escena",
+      "title": "Papel en escena",
+      "description": "Figuras de papel cuentan la historia de un barrio que despierta.",
+      "category": "Teatro",
+      "startAt": "2026-11-13T16:00:00-05:00",
+      "endAt": "2026-11-13T17:00:00-05:00",
+      "venueId": "sala-la-trama",
+      "artistIds": [
+        "taller-nudo"
+      ],
+      "priceCents": 300,
+      "capacity": 24,
+      "reservable": true,
+      "image": "/art/teatro.svg"
+    },
+    {
+      "id": "cuerpos-al-viento",
+      "title": "Cuerpos al viento",
+      "description": "Acrobacias y percusión transforman la plaza en una pista circular.",
+      "category": "Circo",
+      "startAt": "2026-11-14T16:00:00-05:00",
+      "endAt": "2026-11-14T18:00:00-05:00",
+      "venueId": "plaza-del-viento",
+      "artistIds": [
+        "duo-bruma"
+      ],
+      "priceCents": 0,
+      "capacity": 100,
+      "reservable": false,
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "voces-del-patio",
+      "title": "Voces del patio",
+      "description": "Relatos de viaje compartidos alrededor de un pequeño patio.",
+      "category": "Narración",
+      "startAt": "2026-11-15T15:00:00-05:00",
+      "endAt": "2026-11-15T16:00:00-05:00",
+      "venueId": "patio-del-rio",
+      "artistIds": [
+        "lara-sur"
+      ],
+      "priceCents": 0,
+      "capacity": 30,
+      "reservable": false,
+      "image": "/art/teatro.svg"
+    },
+    {
+      "id": "mapa-sonoro",
+      "title": "Mapa sonoro",
+      "description": "Un taller para escuchar y componer con los sonidos del entorno.",
+      "category": "Taller",
+      "startAt": "2026-11-16T10:00:00-05:00",
+      "endAt": "2026-11-16T12:00:00-05:00",
+      "venueId": "casa-del-eco",
+      "artistIds": [
+        "ensamble-cauce"
+      ],
+      "priceCents": 0,
+      "capacity": 2,
+      "reservable": true,
+      "image": "/art/musica.svg"
+    },
+    {
+      "id": "hilos-de-agua",
+      "title": "Hilos de agua",
+      "description": "Un dúo sigue el ritmo del agua con movimientos encadenados.",
+      "category": "Danza",
+      "startAt": "2026-11-17T18:00:00-05:00",
+      "endAt": "2026-11-17T19:00:00-05:00",
+      "venueId": "teatro-del-sur",
+      "artistIds": [
+        "colectivo-umbral",
+        "ines-luz"
+      ],
+      "priceCents": 400,
+      "capacity": 40,
+      "reservable": true,
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "objetos-en-fuga",
+      "title": "Objetos en fuga",
+      "description": "Objetos de uso diario adquieren vida en una mesa de trabajo.",
+      "category": "Teatro",
+      "startAt": "2026-11-18T17:00:00-05:00",
+      "endAt": "2026-11-18T18:00:00-05:00",
+      "venueId": "sala-la-trama",
+      "artistIds": [
+        "taller-nudo"
+      ],
+      "priceCents": 200,
+      "capacity": 20,
+      "reservable": true,
+      "image": "/art/teatro.svg"
+    },
+    {
+      "id": "rueda-abierta",
+      "title": "Rueda abierta",
+      "description": "Una rueda de artistas comparte juegos de equilibrio en la plaza.",
+      "category": "Circo",
+      "startAt": "2026-11-19T16:00:00-05:00",
+      "endAt": "2026-11-19T17:00:00-05:00",
+      "venueId": "plaza-del-viento",
+      "artistIds": [
+        "duo-bruma"
+      ],
+      "priceCents": 0,
+      "capacity": 90,
+      "reservable": false,
+      "image": "/art/danza.svg"
+    },
+    {
+      "id": "la-casa-canta",
+      "title": "La casa canta",
+      "description": "La casa se convierte en instrumento para una sesión de escucha.",
+      "category": "Música",
+      "startAt": "2026-11-20T18:00:00-05:00",
+      "endAt": "2026-11-20T19:00:00-05:00",
+      "venueId": "casa-del-eco",
+      "artistIds": [
+        "ines-luz"
+      ],
+      "priceCents": 0,
+      "capacity": 18,
+      "reservable": true,
+      "image": "/art/musica.svg"
+    },
+    {
+      "id": "archivo-de-sombras",
+      "title": "Archivo de sombras",
+      "description": "Una narradora recompone cartas y recuerdos con sombras de papel.",
+      "category": "Narración",
+      "startAt": "2026-11-21T17:00:00-05:00",
+      "endAt": "2026-11-21T18:00:00-05:00",
+      "venueId": "sala-la-trama",
+      "artistIds": [
+        "lara-sur",
+        "taller-nudo"
+      ],
+      "priceCents": 300,
+      "capacity": 25,
+      "reservable": true,
+      "image": "/art/teatro.svg"
+    },
+    {
+      "id": "cauce-final",
+      "title": "Cauce final",
+      "description": "Concierto colectivo de cierre junto al río.",
+      "category": "Música",
+      "startAt": "2026-11-22T19:00:00-05:00",
+      "endAt": "2026-11-22T21:00:00-05:00",
+      "venueId": "patio-del-rio",
+      "artistIds": [
+        "ensamble-cauce",
+        "ines-luz"
+      ],
+      "priceCents": 0,
+      "capacity": 120,
+      "reservable": false,
+      "image": "/art/musica.svg"
+    }
+  ]
+}

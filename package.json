@@ -1,0 +1,37 @@
+{
+  "name": "fiavl-explora",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": "24.22.3",
+    "npm": "11.17.0"
+  },
+  "packageManager": "npm@11.17.0",
+  "scripts": {
+    "dev": "concurrently --kill-others \"node --watch apps/api/src/server.ts\" \"vite --config apps/web/vite.config.ts\"",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "build": "tsc -p apps/api/tsconfig.build.json && vite build --config apps/web/vite.config.ts",
+    "test:e2e": "playwright test",
+    "db:seed": "node apps/api/src/seed-cli.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "@playwright/test": "1.65.1",
+    "@types/express": "5.0.5",
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.5",
+    "@types/react-dom": "19.2.3",
+    "concurrently": "9.2.5",
+    "eslint": "9.39.1",
+    "globals": "16.5.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.73.0"
+  }
+}

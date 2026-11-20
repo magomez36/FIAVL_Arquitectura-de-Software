@@ -1,0 +1,9 @@
+{
+  "name": "@fiavl/api",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@fiavl/contracts": "1.0.0",
+    "express": "5.1.0"
+  }
+}

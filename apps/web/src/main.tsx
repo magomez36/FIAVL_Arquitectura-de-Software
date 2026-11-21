@@ -25,13 +25,13 @@ function Header() {
       document.removeEventListener('pointerdown', outside);
     };
   }, [open]);
-  return <header ref={header}>
+  return <header className="stage-header" ref={header}>
     <div className="bar flex items-center justify-between">
       <Link className="brand flex items-center" to="/" onClick={() => setOpen(false)}>
         <img src="/art/logo.svg" alt="" width="38" height="38"/><strong>FIAVL <i>Explora</i></strong>
       </Link>
       <div className="bar-tools flex items-center">
-        <span className="edition">Edición demo / 2026</span>
+        <span className="edition">Prototipo académico no oficial · Datos demo</span>
         <button className="menu-toggle" ref={button} aria-expanded={open} aria-controls="nav" onClick={() => setOpen(!open)}>
           {open ? <X size={18}/> : <Menu size={18}/>} Menú
         </button>
@@ -53,7 +53,7 @@ function App() {
   const previous = useRef(pathname);
   const main = useRef<HTMLElement>(null);
   useEffect(() => {
-    document.title = (features.find(f => f.path === pathname)?.label ?? (pathname === '/' ? 'Loja en escena' : 'Página no encontrada')) + ' · FIAVL Explora';
+    document.title = (features.find(f => f.path === pathname)?.label ?? (pathname === '/' ? 'La ciudad abre el telón' : 'Página no encontrada')) + ' · FIAVL Explora';
     if (previous.current !== pathname) {
       main.current?.focus();
       window.scrollTo(0, 0);
@@ -68,7 +68,9 @@ function App() {
       {features.map(({ path, Page }) => <Route key={path} path={path} element={<Page/>}/>)}
       <Route path="*" element={<section className="interior"><h1>Página no encontrada</h1><Link className="action" to="/">Volver al inicio</Link></section>}/>
     </Routes></main>
-    <footer><div className="footer-inner"><strong>FIAVL Explora</strong><span>Prototipo no oficial · Datos demo</span></div></footer>
+    <footer className="stage-footer"><div className="footer-inner"><strong>FIAVL Explora</strong><span>Prototipo no oficial · Datos demo</span><div className="stage-sources"><b>Fuentes del programa</b><a href="https://festivaldeloja.com/">Festival de Loja ↗</a>
+      <a href="https://cultura.ec/festival/artes-vivas-loja">Cultura.ec ↗</a>
+      <a href="https://cultura.ec/festival/artes-vivas-loja/entrada-libre">Actividades de entrada libre ↗</a></div></div></footer>
   </>;
 }
 

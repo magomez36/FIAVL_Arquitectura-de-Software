@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { eventsSchema, venueSchema, type Event, type Venue } from '@fiavl/contracts';
 import { z } from 'zod';
+import { FestivalVenues } from '../../components/FestivalGuide.tsx';
 import { Status } from '../../components/Status.tsx';
 import { getResource } from '../../lib/http.ts';
 import type { Feature } from '../types.ts';
@@ -16,10 +17,10 @@ function searchable(value: string) {
 }
 
 function VenueDetails({ venue, events }: { venue: Venue; events: Event[] }) {
-  return <details className="rounded-lg border border-[var(--line)] bg-[#fffbf4] p-5">
+  return <details className="festival-demo-venue rounded-lg border border-[var(--line)] bg-[#fffbf4] p-5">
     <summary className="cursor-pointer font-serif text-2xl">{venue.name}</summary>
     <div className="mt-5 grid gap-6 md:grid-cols-[1fr_2fr]">
-      <img className="w-full rounded" src={venue.image} alt="" loading="lazy"/>
+      <div><img className="w-full rounded" src={venue.image} alt="" loading="lazy"/><small>Ilustración de la sede demo</small></div>
       <div className="space-y-4">
         <p>{venue.description}</p>
         <dl>
@@ -59,6 +60,8 @@ function Page() {
   const matches = catalog?.venues.filter(v => [v.name, v.address].some(value => searchable(value).includes(term)));
   return <section className="interior">
     <h1>Espacios culturales</h1>
+    <FestivalVenues/>
+    <h2 className="stage-heading festival-demo-title">Directorio demo</h2>
     <p className="mb-7 max-w-prose">Las direcciones y condiciones de acceso son datos demo. Confirma las condiciones reales con la sede antes de visitarla.</p>
     {failed ? <Status message="No se pudo cargar el directorio." retry={() => {
       setFailed(false);

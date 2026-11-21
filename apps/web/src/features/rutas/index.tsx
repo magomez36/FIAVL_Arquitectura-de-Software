@@ -25,7 +25,7 @@ function Recorrido({ venues }: { venues: Venue[] }) {
     </select>
     <p className="mb-6 max-w-prose">{recorrido.purpose}</p>
     <div className="grid items-start gap-6 md:grid-cols-[1fr_2fr]">
-      <section aria-label="Secuencia del recorrido">
+      <section className="festival-route-stops" aria-label="Secuencia del recorrido">
         <h2 className="mb-2 text-2xl">Paradas</h2>
         <ol className="list-decimal space-y-2 pl-6">{stops.map((stop, i) =>
           <li key={recorrido.stops[i]} aria-current={position === i ? 'step' : undefined}
@@ -34,7 +34,7 @@ function Recorrido({ venues }: { venues: Venue[] }) {
           </li>)}</ol>
       </section>
       <div>
-        <article className="card-body" aria-live="polite" aria-atomic="true">
+        <article key={recorrido.name + position} className="card-body festival-stop" aria-live="polite" aria-atomic="true">
           <p className="schedule">Parada {position + 1} de {stops.length}</p>
           {venue ? <>
             <h2 className="my-2 text-3xl">{venue.name}</h2>
@@ -72,7 +72,9 @@ function Page() {
   }, [attempt]);
 
   return <section className="interior">
-    <h1>Recorridos culturales</h1>
+    <div className="festival-inner-hero festival-route-head"><p className="festival-label">Cuaderno de recorridos · Demo</p>
+      <h1>Recorridos culturales</h1><p>Sigue el hilo de la música y las artes escénicas de parada en parada.</p>
+      <small>Fotografía de ambientación · Caio Rosendo</small></div>
     <p className="mb-6 max-w-prose">Explora las sedes de la edición demo por tema. Las direcciones y notas de acceso son ilustrativas.</p>
     {failed ? <Status message="No se pudieron cargar las sedes." retry={() => {
       setFailed(false);

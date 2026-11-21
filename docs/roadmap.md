@@ -10,3 +10,5 @@
 | 10 | Opiniones | Namespace feedback y migración propia |
 
 Cada equipo define la aceptación detallada de su spec después de la integración de la base.
+
+Spec 10 reúne la encuesta persistente de /opiniones y la base visual transversal «La ciudad abre el telón». La fase A entrega portada, carrusel y componentes documentados en [el sistema de diseño](design-system.md). La fase B integra valoración y resumen en las tres capas. Ambas se validan en specs/010-encuesta.

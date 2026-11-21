@@ -1,5 +1,8 @@
 import type { DatabaseSync } from 'node:sqlite';
-import type { Router } from 'express';
-import { feedback } from '../features/feedback.ts';
+import { createFeedbackRouter } from '../features/feedback.ts';
+import { createFeedbackRepository } from '../repositories/feedback.ts';
+import { createFeedbackService } from '../services/feedback.ts';
 
-export const composeFeedback: (connection: DatabaseSync) => Router = () => feedback;
+export function composeFeedback(connection: DatabaseSync) {
+  return createFeedbackRouter(createFeedbackService(createFeedbackRepository(connection)));
+}

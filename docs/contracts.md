@@ -12,7 +12,8 @@ Base de origen único `/api`. Todas las respuestas llevan JSON UTF-8. Visibilida
 | GET /api/venues | 200, Venue[], por id | 5 con seed |
 | GET /api/venues/:id | 200, Venue | /api/venues/teatro-del-sur |
 | Cualquier método /api/reservations o descendiente | 501 NOT_IMPLEMENTED | POST /api/reservations |
-| Cualquier método /api/feedback o descendiente | 501 NOT_IMPLEMENTED | POST /api/feedback |
+| POST /api/feedback | 201, {"accepted":true} | {"rating":4,"comment":"Buena experiencia"} |
+| GET /api/feedback/summary | 200, resumen de valoraciones | {"total":1,"distribution":[0,0,0,1,0],"average":4} |
 
 ## Campos
 
@@ -80,7 +81,7 @@ Objetos de forma exacta. Todos los campos obligatorios y no nulos. Los textos de
 | 400 | INVALID_ID | Identificador mal formado |
 | 404 | NOT_FOUND | Ficha o ruta inexistente |
 | 500 | INTERNAL_ERROR | Fallo inesperado de lectura o validación del catálogo |
-| 501 | NOT_IMPLEMENTED | Namespace de reservas u opiniones pendiente |
+| 501 | NOT_IMPLEMENTED | Namespace de reservas pendiente |
 
 Ejemplo de `GET /api/events/desconocido`:
 
@@ -97,3 +98,9 @@ El inventario reproducible está en [fixtures.json](../apps/api/src/fixtures.jso
 ## Persistencia del navegador
 
 El módulo `apps/web/src/lib/storage.ts` guarda JSON por clave versionada: `fiavl:agenda:v1`, `fiavl:reservations:v1`, `fiavl:accessibility:v1` y `fiavl:feedback:v1`. Cada dueño define el contenido y el validador de lectura. La lectura devuelve undefined ante ausencia, corrupción o acceso bloqueado; la escritura informa éxito con un booleano.
+
+## Encuesta de experiencia
+
+POST recibe application/json, máximo 8 KiB, con rating entero de 1 a 5 y comment opcional de hasta 500 unidades UTF-16 antes de recortar espacios exteriores. Solo se admiten esos campos. Ausencia de puntuación, forma inválida o JSON malformado devuelven 400 INVALID_INPUT. El límite de tamaño devuelve 413 INVALID_INPUT. Los errores conservan el envoltorio común.
+
+GET /api/feedback/summary devuelve total, distribution (cinco cantidades, de una a cinco estrellas) y average redondeado a un decimal. Con cero respuestas devuelve {"total":0,"distribution":[0,0,0,0,0],"average":null}. Los comentarios se almacenan en la base local y el API público entrega únicamente el agregado.

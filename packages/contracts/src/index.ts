@@ -22,9 +22,23 @@ export const eventSchema = z.strictObject({
 export const eventsSchema = z.array(eventSchema);
 export const healthSchema = z.strictObject({ status: z.literal('ok') });
 export const errorSchema = z.strictObject({ error: z.strictObject({
-  code: z.enum(['INVALID_ID', 'NOT_FOUND', 'NOT_IMPLEMENTED', 'INTERNAL_ERROR']), message: text
+  code: z.enum(['INVALID_ID', 'INVALID_INPUT', 'NOT_FOUND', 'NOT_IMPLEMENTED', 'INTERNAL_ERROR']), message: text
 }) });
 export type Event = z.infer<typeof eventSchema>;
 export type Artist = z.infer<typeof artistSchema>;
 export type Venue = z.infer<typeof venueSchema>;
 export type ErrorCode = z.infer<typeof errorSchema>['error']['code'];
+
+export const feedbackInputSchema = z.strictObject({
+  rating: z.int().min(1).max(5),
+  comment: z.string().max(500).trim().optional()
+});
+export const feedbackReceiptSchema = z.strictObject({ accepted: z.literal(true) });
+const frequency = z.int().nonnegative();
+export const feedbackSummarySchema = z.strictObject({
+  total: frequency,
+  distribution: z.tuple([frequency, frequency, frequency, frequency, frequency]),
+  average: z.number().min(1).max(5).nullable()
+});
+export type FeedbackInput = z.infer<typeof feedbackInputSchema>;
+export type FeedbackSummary = z.infer<typeof feedbackSummarySchema>;

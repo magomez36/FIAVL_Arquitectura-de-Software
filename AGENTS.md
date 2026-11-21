@@ -30,3 +30,7 @@ Antes de integrar: revisar cambios contractuales, ejecutar la [guía de contribu
 En Windows ejecutar `.\fiavl.cmd setup` en la raíz; los procesos del agente no heredan el PATH de una invocación finalizada. Usar `.\fiavl.cmd check` para las puertas de calidad, o ejecutar comandos npm dentro de `.\fiavl.cmd shell`. En Linux/macOS seleccionar el runtime del README antes de ejecutar npm. Los scripts de entorno y el workflow pertenecen a Spec 1.
 
 Para SDD, conservar la inicialización y las skills versionadas. Verificar `specify version` (1.4.3), rama propia y `FEATURE_DIR` con el helper check-prerequisites.ps1 -Json -PathsOnly. Usar las instrucciones del README para instalar el CLI cuando falte. El bootstrap de la aplicación funciona independientemente del CLI.
+
+## Spec 10 ampliado
+
+Manuel autoriza en feature/spec-10 la encuesta y la identidad transversal «La ciudad abre el telón», con SDD en specs/010-encuesta. La propiedad adicional cubre portada, shell, CSS y componentes stage, fotografías locales, guía visual y documentación asociada. El servicio y el repositorio feedback se conectan por composition/feedback.ts. Su contrato Zod y el código INVALID_INPUT amplían la API común. Los equipos integran sus páginas siguiendo [el sistema de diseño](docs/design-system.md) dentro de sus rutas y pruebas propias. Manuel decide y realiza los merges a main.

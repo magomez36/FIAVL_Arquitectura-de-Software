@@ -41,3 +41,8 @@ Añadir, duplicado (botón deshabilitado y `addId` idempotente), quitar, orden, 
 - Cambio mínimo autorizado por Manuel, solo en `tests/e2e/spec-10.spec.ts`: antes de cada `fastForward` se espera el texto de estado visible correspondiente (autoavance, puntero, pausa manual, controles, pestaña en pausa). No se quitaron aserciones, ni se añadieron esperas fijas ni timeouts mayores.
 - Después del cambio: `--repeat-each=15` dio 15 de 15 aciertos. Es evidencia local; no se sabe si el CI de Linux lo confirmará.
 - GitHub Actions de esta actualización: NO consultado todavía.
+
+## Corrección de contraste (23 de noviembre de 2026, a petición de Manuel)
+- `mi-agenda.css`: el título `h1` pasa de `--stage-ivory` (invisible sobre fondo marfil) a `--stage-ink`. Además, las tarjetas de Mi agenda tienen relleno (`--stage-gap`) para que el texto no toque el borde. La prueba estática de tokens usa `--stage-ink` en lugar de `--stage-ivory`.
+- Revisión visual (capturas con Playwright/Chromium en macOS, vista de `/mi-agenda` con dos eventos agregados): a 1440 px y a 375 px el título, los encabezados, las tarjetas, el aviso de solapamiento y los botones se leen y no hay desbordamiento horizontal. Revisión por una persona, lector de pantalla y movimiento reducido en navegador: NO VERIFICADOS.
+- Local: lint, typecheck y build salida 0; `npm test` 23 de 23; `npm run test:e2e` 30 de 30. GitHub Actions de este commit: NO consultado.

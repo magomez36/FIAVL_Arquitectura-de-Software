@@ -1,9 +1,10 @@
 /* Scoped to /mi-agenda. Uses the shared «La ciudad abre el telón» tokens only. */
 .mi-agenda { display: grid; gap: var(--stage-gap); }
-.mi-agenda-title { font-family: Georgia, serif; font-size: clamp(2rem, 6vw, 3.25rem); color: var(--stage-ivory); }
+.mi-agenda-title { font-family: Georgia, serif; font-size: clamp(2rem, 6vw, 3.25rem); color: var(--stage-ink); }
 .mi-agenda-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--stage-gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); }
 .mi-agenda-conflict { border-left: 4px solid var(--stage-gold); padding-left: .75rem; font-weight: 700; }
 .mi-agenda-notice { background: var(--stage-surface); color: var(--stage-ink); border: 1px solid var(--stage-line); border-radius: var(--stage-radius); padding: var(--stage-gap); }
 .mi-agenda .stage-badge { position: static; display: inline-block; margin-right: .5rem; }
 .mi-agenda button:focus-visible, .mi-agenda a:focus-visible { outline: 3px solid var(--stage-gold); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .mi-agenda *, .mi-agenda *::before, .mi-agenda *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+.mi-agenda .stage-card { padding: var(--stage-gap); }

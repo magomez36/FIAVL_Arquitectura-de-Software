@@ -40,7 +40,7 @@ test('estructura: Stage, tokens, foco, movimiento reducido y sin reservas', () =
   assert.match(page, /readLocal\('agenda'/);
   assert.match(page, /writeLocal\('agenda'/);
   assert.doesNotMatch(page, /localStorage|reservations|method: 'POST'/);
-  for (const token of ['--stage-gap', '--stage-radius', '--stage-gold', '--stage-ivory']) assert.ok(css.includes(token));
+  for (const token of ['--stage-gap', '--stage-radius', '--stage-gold', '--stage-ink']) assert.ok(css.includes(token));
   assert.match(css, /focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
 });

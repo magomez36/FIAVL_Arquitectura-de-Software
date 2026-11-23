@@ -29,3 +29,15 @@ Añadir, duplicado (botón deshabilitado y `addId` idempotente), quitar, orden, 
 - NO VERIFICADO: revisión visual manual, lector de pantalla, movimiento reducido en navegador (solo comprobación estática del CSS), otros sistemas operativos.
 - CI remoto NO consultado. El test intermitente de Spec 10 («escena automática…») falló una vez en una corrida local y una vez en CI en una rama anterior; su causa no está demostrada. Las 8 repeticiones de hoy pasaron, lo que no demuestra que esté resuelto. No se tocó.
 - Prueba ajena modificada: ninguna.
+
+## Actualización 23 de noviembre de 2026 · sincronización con main (resultados LOCALES)
+- `origin/main` (798337c, PR #6 Spec 3 Artistas) integrado con `git merge --no-edit origin/main` (commit de merge fdd31cd), sin conflictos. Spec 3 presente (`specs/003-artistas`, `tests/e2e/spec-03.spec.ts`).
+- Runtime: Node 24.22.3 y npm 11.17.0 (prefijo del README); `npm ci` salida 0.
+- `npm run lint`, `typecheck`, `build`: salida 0. `npm test`: 23 de 23. `npm run test:e2e`: 30 de 30 (Chromium, macOS).
+
+### Prueba intermitente de Spec 10 («escena automática, pausas, teclado e indicadores»)
+- Reproducida: antes del cambio, `--repeat-each=15` dio 12 fallos y 3 aciertos (con los workers en paralelo), todos en `spec-10.spec.ts:54`: `Expected "Ir a escena 2"`, `Received "Ir a escena 3"`, justo después de simular la pestaña oculta y avanzar el reloj 8000 ms.
+- Causa probable (consistente con la evidencia, no probada en el componente): la prueba avanzaba el reloj falso justo después de disparar el evento, antes de que React confirmara el estado de pausa y limpiara el temporizador de `StageCarousel`. No se identificó defecto en el componente y no se tocó.
+- Cambio mínimo autorizado por Manuel, solo en `tests/e2e/spec-10.spec.ts`: antes de cada `fastForward` se espera el texto de estado visible correspondiente (autoavance, puntero, pausa manual, controles, pestaña en pausa). No se quitaron aserciones, ni se añadieron esperas fijas ni timeouts mayores.
+- Después del cambio: `--repeat-each=15` dio 15 de 15 aciertos. Es evidencia local; no se sabe si el CI de Linux lo confirmará.
+- GitHub Actions de esta actualización: NO consultado todavía.

@@ -52,3 +52,22 @@ Pasó en las dos ejecuciones completas de `check`. Dos pasadas verdes no prueban
 - 409 y 422 comparten el código `INVALID_INPUT` por decisión documentada (architecture.md); docs/contracts.md ya describe los endpoints reales.
 - Se puede reservar un evento ya pasado (el contrato común prohíbe filtrar por reloj).
 - La prueba E2E usa un servidor compartido y datos demo; cada prueba devuelve el aforo que toma.
+
+## Correcciones posteriores a la auditoría y al CI del PR #7
+
+CI Linux (pull_request, ejecución 45201517219) falló solo en `tests/e2e/spec-10.spec.ts` «escena automática, pausas, teclado e indicadores» (esperaba «Ir a escena 2», encontró «Ir a escena 3»); las otras 32 E2E pasaron.
+
+| Cambio | Detalle |
+|---|---|
+| Prueba spec-10 | Corrección ya desarrollada y validada por Davide en `feature/spec-5` (commit `f24a46e`, CI verde en Linux y Windows). Se incorporó solo ese archivo con `git restore --source=origin/feature/spec-5`; el diff son 7 líneas añadidas: esperas del estado visible antes de cada `page.clock.fastForward()`. Sin cambios en StageCarousel, aserciones, timeouts ni omisiones. |
+| M1 | `docs/architecture.md`: retiradas las afirmaciones obsoletas de 501 para Reservas. |
+| M2 | `reservas.css`: foco visible en vino con halo blanco dentro de los paneles claros (el dorado no contrasta sobre marfil). |
+| B1 | `reservas.css`: bordes de inputs/selects de 2 px en `#6B5A62` (≥5:1 sobre blanco y marfil). |
+| B2, B3 | Observaciones no bloqueantes de la auditoría, documentadas sin cambio de código. |
+
+| Comando | Resultado |
+|---|---|
+| `npx playwright test tests/e2e/spec-10.spec.ts -g "escena automática" --repeat-each=15` | 15 de 15 (44,5 s), Node 24.22.3 del bootstrap |
+| `.\fiavl.cmd check` | salida 0: lint, tipos, Node 35 de 35, build, Playwright 33 de 33 (51,5 s) |
+| Revisión visual de Reservas a 375 y 1440 px | NO VERIFICADO (sin navegador interactivo; solo las comprobaciones automáticas de desbordamiento y foco de spec-06) |
+| Contrastes M2/B1 | Calculados a partir de los tokens, no medidos en navegador |

@@ -4,12 +4,12 @@
 
 **Input**: Mostrar el catálogo de artistas con imagen, nombre, país, disciplina, biografía y detalle accesible; búsqueda por nombre; filtros combinables por país y disciplina; actuaciones relacionadas por `artistIds`.
 
-Fuente de datos: catálogo DEMO (`GET /api/artists`, `/events`, `/venues`). Prototipo académico no oficial, hora America/Guayaquil. Sin dependencia de `/agenda` ni de Spec 2.
+Fuente de datos: catálogo DEMO (`GET /api/artists`, `/events`, `/venues`). Prototipo académico no oficial, hora America/Guayaquil. Sin dependencia de `/agenda` ni de Spec 2 (aunque Spec 2 ya está integrado en `main`).
 
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Explorar el catálogo (Priority: P1)
-**Independent Test**: abrir `/artistas` con `/agenda` aún pendiente.
+**Independent Test** (escenario de independencia previsto durante la especificación, cuando `/agenda` aún estaba pendiente): abrir `/artistas` sin depender de `/agenda`. *Estado real en la integración: Spec 2 ya está integrado en `main` y `/agenda` está activa; la independencia se sigue verificando porque Spec 3 no importa nada de `features/agenda`.*
 1. **Dado** el catálogo demo, **cuando** abro `/artistas`, **entonces** veo una ficha por artista (orden de la API) con imagen local, nombre, país, disciplina y biografía.
 2. **Dado** que la API responde, **cuando** consulto el contador, **entonces** anuncia «N artistas» y se actualiza al filtrar.
 

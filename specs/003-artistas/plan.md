@@ -33,7 +33,7 @@ specs/003-artistas/          # SDD, validation.md, architecture.md
 2. **Un solo estado de carga** para las tres lecturas (`Promise.all`); un fallo muestra error con reintento, sin datos parciales.
 3. **Búsqueda normalizada** (NFD sin marcas, minúsculas) para tolerar tildes.
 4. **Fecha con `Intl` y `timeZone: 'America/Guayaquil'`**: día civil de Loja garantizado.
-5. **Sin dependencia de Spec 2**: ninguna importación de `features/agenda`.
+5. **Sin dependencia de Spec 2**: ninguna importación de `features/agenda`. (Previsto cuando `/agenda` estaba pendiente; en la integración real Spec 2 ya está en `main` y la restricción se mantiene por independencia de módulos.)
 
 ## Riesgos
 `home.spec.ts` y el menú derivan de `available`; al activarlo, el enlace deja de marcarse pendiente (comportamiento esperado, el smoke común lo comprueba dinámicamente).

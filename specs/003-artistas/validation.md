@@ -36,3 +36,8 @@ CI remoto (GitHub Actions) **no ejecutado**; no se declara verde.
 
 ## Cobertura FR/SC
 FR-001/009 → prueba estática; FR-002/003 → E2E 1 + unit; FR-004 → E2E 2; FR-005 → E2E 3-4; FR-006 → CSS + E2E 1 (parcial, ver limitaciones); FR-007 → E2E 1; FR-008 → diff (solo archivos propios). SC-001..005 → ver tabla de escenarios.
+
+## Corrección posterior a la revisión (PR #6)
+- **Contraste del título**: `.artistas-title` usaba `--stage-ivory` (#F5EDE0), igual al fondo de página (`--paper`), y quedaba prácticamente invisible. Ahora usa `--stage-ink` (#302237, ~13:1 sobre ivory). Solo cambió esa propiedad en `apps/web/src/features/artistas/artistas.css`; no se tocaron tokens globales ni Spec 10. Filtros y fichas ya usaban `--stage-ink` sobre `--stage-surface`/blanco.
+- **Estado SDD**: spec y plan distinguen ahora el escenario de independencia previsto (agenda pendiente) del estado real (Spec 2 integrado en `main`, `/agenda` activa). No se eliminaron requisitos ni evidencias.
+- **Verificación tras la corrección**: `.\fiavl.cmd check` en Windows, código 0 (lint, tipos, pruebas Node, build y 26/26 E2E, incluido `spec-10` «escena automática…»). `git diff --check` sin errores. Siguen sin realizarse capturas ni revisión visual manual a 375/1440 px, ni pruebas en Linux/macOS; el contraste del título se justifica por los valores de los tokens, no por inspección visual.

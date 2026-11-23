@@ -1,6 +1,6 @@
 /* Scoped to /artistas. Uses the shared «La ciudad abre el telón» tokens only. */
 .artistas { display: grid; gap: var(--stage-gap); }
-.artistas-title { font-family: Georgia, serif; font-size: clamp(2rem, 6vw, 3.25rem); color: var(--stage-ivory); }
+.artistas-title { font-family: Georgia, serif; font-size: clamp(2rem, 6vw, 3.25rem); color: var(--stage-ink); }
 .artistas-filters { display: grid; gap: var(--stage-gap); grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); align-items: end;
   background: var(--stage-surface); color: var(--stage-ink); border: 1px solid var(--stage-line); border-radius: var(--stage-radius); padding: var(--stage-gap); }
 .artistas-filters label { display: grid; gap: .25rem; font-weight: 700; }

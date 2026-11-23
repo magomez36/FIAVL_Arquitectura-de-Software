@@ -27,3 +27,24 @@ Windows 11 x64, rama feature/spec-9. HEAD inicial y base 3832460 (main con Spec 
 - Inspección visual: capturas de Chromium a 1440 px (estándar) y 375 px (elevado, extra grande) revisadas manualmente; no se conservan en el repositorio. Otros navegadores y dispositivos físicos: NO VERIFICADO.
 - CI remoto (Windows/Linux) del SHA nuevo: se consulta tras el push.
 - No implica conformidad WCAG certificada. Rollup avisa de anotaciones descartadas en Zod (preexistente).
+
+
+## Auditoría posterior y correcciones (commit auditado `0e8435e`)
+
+Una revisión técnica en sesión separada del commit `0e8435e` concluyó «apto para PR» con cuatro observaciones bajas. Esa revisión no es aprobación formal de los commits posteriores: el diff de esta corrección requiere revisión propia.
+
+| Hallazgo | Corrección | Prueba |
+|---|---|---|
+| H1 aviso de datos dañados permanecía tras guardar | Estado `corrupt`; se retira solo cuando `writeLocal` tiene éxito. Si el guardado falla, se mantiene. | E2E «H1: el aviso… hasta una escritura válida», «H2: … escritura bloqueada» |
+| H2 Restablecer deshabilitado con datos dañados | Habilitado si `!isDefault(prefs) \|\| corrupt`; al restablecer guarda `{version:1,normal,standard}`. | E2E «H1/H2: restablecer repara…», «H2: sin nada que reparar…» |
+| H3 el `h1` no escalaba | Causa real: `.interior h1` (style.css) empataba en especificidad y ganaba, por lo que el título nunca usó el CSS de la guía. Ahora `.interior .a11y-guide h1` con `clamp(1.6em,1.2em+3vw,2.4em)` (relativo a `--a11y-size`). | E2E «H3» a 375 y 1440 px (tamaño estrictamente creciente, sin desbordamiento) |
+| H4 botón deshabilitado con `opacity:.75` | Sí fue necesario un ajuste: sin opacidad, fondo de tarjeta, texto atenuado y borde discontinuo; distinguible y con contraste ≥4,5:1 en ambos contrastes. | E2E «H4» (razón de contraste calculada, html/body y fuente raíz intactos, `/espacios` sin guía) |
+
+### Ejecución local (Windows 11 x64, Node 24.22.3 vía bootstrap)
+- `.\fiavl.cmd setup`: exit 0. `.\fiavl.cmd check`: exit 0 (lint, tipos, 39 pruebas Node, build y 50 E2E correctos; spec-09 pasó de 10 a 17 E2E). Spec 10 sin intermitencia en esta ejecución.
+- Inspección visual: capturas Chromium reales de 375 y 1440 px, texto normal y extra grande, contraste estándar y elevado (8 combinaciones, sin scroll horizontal medido). Revisé las de 375 px extra grande/elevado y 1440 px normal/estándar: foco visible, botón deshabilitado distinguible. Las capturas no se versionan.
+
+### Límites vigentes
+- `specify` (Spec Kit 1.4.3) sigue sin ejecutarse; SDD redactado manualmente. NO VERIFICADO con Spec Kit.
+- Lectores de pantalla (NVDA/JAWS/VoiceOver), otros navegadores y dispositivos físicos: NO VERIFICADO. Sin conformidad WCAG certificada.
+- CI del SHA final y del PR: ver descripción del PR.

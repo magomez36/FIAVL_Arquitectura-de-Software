@@ -144,3 +144,107 @@ test('movimiento reducido: sin animaciones ni transiciones en la guía', async (
   await expect(card).toBeVisible();
   expect(await card.evaluate(el => getComputedStyle(el).transitionDuration)).toMatch(/^0s/);
 });
+
+const reset = (page: Page) => page.getByRole('button', { name: 'Restablecer preferencias' });
+
+test('H1/H2: restablecer repara datos corruptos, guarda el objeto válido y retira el aviso', async ({ page }) => {
+  await page.addInitScript(k => localStorage.setItem(k, '{"version":1,"textSize":"enorme"}'), KEY);
+  await page.goto('/accesibilidad');
+  await expect(page.getByText('no eran válidas')).toBeVisible();
+  await expect(reset(page)).toBeEnabled();
+  await reset(page).click();
+  expect(await page.evaluate(k => JSON.parse(localStorage.getItem(k)!), KEY)).toEqual({ version: 1, textSize: 'normal', contrast: 'standard' });
+  await expect(page.getByText('no eran válidas')).toHaveCount(0);
+  await expect(reset(page)).toBeDisabled();
+  await expect(page.getByRole('status').filter({ hasText: 'restablecidas' })).toBeVisible();
+});
+
+test('H1: el aviso de corrupción se mantiene hasta una escritura válida', async ({ page }) => {
+  await page.addInitScript(k => {
+    if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem(k, '{"version":1,"textSize":"enorme"}'); }
+  }, KEY);
+  await page.goto('/accesibilidad');
+  await expect(page.getByText('no eran válidas')).toBeVisible();
+  await page.getByLabel('Elevado').check();
+  await expect(page.getByText('no eran válidas')).toHaveCount(0);
+  expect(await page.evaluate(k => JSON.parse(localStorage.getItem(k)!), KEY)).toEqual({ version: 1, textSize: 'normal', contrast: 'high' });
+  await page.reload();
+  await expect(page.getByText('no eran válidas')).toHaveCount(0);
+  await expect(page.getByText('Preferencias restauradas')).toBeVisible();
+});
+
+test('H2: con datos corruptos y escritura bloqueada, restablecer avisa y conserva el aviso de corrupción', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', e => errors.push(e.message));
+  await page.addInitScript(k => {
+    const get = Storage.prototype.getItem;
+    localStorage.setItem(k, '{"version":1,"textSize":"enorme"}');
+    Storage.prototype.getItem = function (key: string) { return key === k ? '{"version":1,"textSize":"enorme"}' : get.call(this, key); };
+    Storage.prototype.setItem = () => { throw new DOMException('bloqueado', 'SecurityError'); };
+  }, KEY);
+  await page.goto('/accesibilidad');
+  await expect(reset(page)).toBeEnabled();
+  await reset(page).click();
+  await expect(page.getByRole('alert')).toContainText('No se pudieron guardar');
+  await expect(page.getByText('no eran válidas')).toBeVisible();
+  await expect(reset(page)).toBeEnabled();
+  expect(errors).toEqual([]);
+});
+
+test('H2: sin nada que reparar, restablecer permanece deshabilitado y es distinguible', async ({ page }) => {
+  await page.goto('/accesibilidad');
+  await expect(reset(page)).toBeDisabled();
+  const style = (el: Element) => { const s = getComputedStyle(el); return { op: s.opacity, border: s.borderTopStyle, bg: s.backgroundColor, fg: s.color }; };
+  const off = await reset(page).evaluate(style);
+  expect(off.border).toBe('dashed');
+  expect(off.op).toBe('1');
+  await page.getByLabel('Grande', { exact: true }).check();
+  const on = await reset(page).evaluate(style);
+  expect(on.border).toBe('solid');
+  expect(on.bg).not.toBe(off.bg);
+});
+
+for (const width of [375, 1440]) {
+  test(`H3: el título escala con el tamaño elegido y no desborda a ${width} px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/accesibilidad');
+    const h1 = page.getByRole('heading', { level: 1 });
+    const size = () => h1.evaluate(el => parseFloat(getComputedStyle(el).fontSize));
+    const sizes: number[] = [];
+    for (const label of ['Normal', 'Grande', 'Extra grande']) {
+      await page.getByLabel(label, { exact: true }).first().check();
+      await expect.poll(size).not.toBe(sizes.at(-1) ?? 0);
+      sizes.push(await size());
+      expect(await noOverflow(page)).toBe(true);
+      expect(await h1.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+    }
+    expect(sizes[1]).toBeGreaterThan(sizes[0]!);
+    expect(sizes[2]).toBeGreaterThan(sizes[1]!);
+    await page.getByLabel('Elevado').check();
+    expect(await noOverflow(page)).toBe(true);
+  });
+}
+
+test('H4: botón deshabilitado legible en contraste estándar y elevado; html y body intactos', async ({ page }) => {
+  await page.goto('/accesibilidad');
+  const ratio = (el: Element) => {
+    const lum = (rgb: string) => {
+      const [r, g, b] = rgb.match(/\d+/g)!.map(n => { const c = Number(n) / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+      return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+    };
+    const s = getComputedStyle(el);
+    const [hi, lo] = [lum(s.color), lum(s.backgroundColor)].sort((a, b) => b - a);
+    return (hi! + 0.05) / (lo! + 0.05);
+  };
+  expect(await reset(page).evaluate(ratio)).toBeGreaterThanOrEqual(4.5);
+  await page.getByLabel('Elevado').check();
+  await reset(page).evaluate(el => el.setAttribute('disabled', ''));
+  expect(await reset(page).evaluate(ratio)).toBeGreaterThanOrEqual(4.5);
+  expect(await page.evaluate(() => [document.documentElement.className, document.body.className, document.documentElement.style.cssText, document.body.style.cssText].join(''))).toBe('');
+  const rootSize = await page.evaluate(() => getComputedStyle(document.documentElement).fontSize);
+  await page.getByLabel('Extra grande').check();
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).fontSize)).toBe(rootSize);
+  await page.goto('/espacios');
+  await expect(page.locator('.a11y-guide')).toHaveCount(0);
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).fontSize)).toBe(rootSize);
+});

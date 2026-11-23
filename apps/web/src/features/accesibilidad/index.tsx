@@ -40,6 +40,7 @@ function Page() {
   const [initial] = useState(restore);
   const [prefs, setPrefs] = useState(initial.prefs);
   const [saveFailed, setSaveFailed] = useState(false);
+  const [corrupt, setCorrupt] = useState(initial.restore === 'corrupt');
   const [message, setMessage] = useState(initial.restore === 'restored' ? 'Preferencias restauradas desde este navegador.' : '');
   const [venues, setVenues] = useState<Venue[]>();
   const [failed, setFailed] = useState(false);
@@ -60,6 +61,7 @@ function Page() {
     setPrefs(next);
     const saved = writeLocal('accessibility', next);
     setSaveFailed(!saved);
+    if (saved) setCorrupt(false);
     setMessage(text);
   }
   const chooseSize = (textSize: TextSize) => update({ ...prefs, textSize },
@@ -96,11 +98,11 @@ function Page() {
                 onChange={() => chooseContrast(c)}/>{contrastLabels[c]}</label>)}</div>
           </fieldset>
           <p data-testid="a11y-current">Estado actual: texto {textSizeLabels[prefs.textSize].toLowerCase()}, contraste {contrastLabels[prefs.contrast].toLowerCase()}.</p>
-          <button type="button" className="a11y-btn" onClick={reset} disabled={isDefault(prefs)}>Restablecer preferencias</button>
+          <button type="button" className="a11y-btn" onClick={reset} disabled={isDefault(prefs) && !corrupt}>Restablecer preferencias</button>
           <p role="status" aria-live="polite" className="a11y-muted">{message}</p>
           {saveFailed && <p className="a11y-notice a11y-warning" role="alert">No se pudieron guardar las preferencias en este
             navegador (almacenamiento bloqueado). Se aplican ahora, pero se perderán al recargar.</p>}
-          {initial.restore === 'corrupt' && <p className="a11y-notice a11y-warning" role="note">Las preferencias guardadas
+          {corrupt && <p className="a11y-notice a11y-warning" role="note">Las preferencias guardadas
             no eran válidas y se usaron los valores predeterminados.</p>}
         </div>
       </StageSection>

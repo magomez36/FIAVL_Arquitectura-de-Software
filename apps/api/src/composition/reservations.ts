@@ -1,5 +1,8 @@
 import type { DatabaseSync } from 'node:sqlite';
-import type { Router } from 'express';
-import { reservations } from '../features/reservations.ts';
+import { createReservationsRouter } from '../features/reservations.ts';
+import { createReservationRepository } from '../repositories/reservations.ts';
+import { createReservationService } from '../services/reservations.ts';
 
-export const composeReservations: (connection: DatabaseSync) => Router = () => reservations;
+export function composeReservations(connection: DatabaseSync) {
+  return createReservationsRouter(createReservationService(createReservationRepository(connection)));
+}

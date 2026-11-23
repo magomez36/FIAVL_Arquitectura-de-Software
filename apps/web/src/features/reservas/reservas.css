@@ -1,0 +1,20 @@
+/* Scoped to /reservas. Uses the shared «La ciudad abre el telón» tokens only; texto sobre marfil usa --stage-ink. */
+.reservas { display: grid; gap: var(--stage-gap); }
+.reservas-title { font-family: Georgia, serif; font-size: clamp(2rem, 6vw, 3.25rem); color: var(--stage-ink); }
+.reservas h2.stage-heading { color: var(--stage-ink); }
+.reservas-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--stage-gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+.reservas-panel { display: grid; gap: var(--stage-gap); background: var(--stage-surface); color: var(--stage-ink);
+  border: 1px solid var(--stage-line); border-radius: var(--stage-radius); padding: var(--stage-gap); max-width: 44rem; }
+.reservas-panel label { display: grid; gap: .25rem; font-weight: 700; }
+.reservas-panel input, .reservas-panel select { min-height: 2.75rem; padding: .25rem .5rem; border: 1px solid var(--stage-line); border-radius: var(--stage-radius); background: #fff; color: var(--stage-ink); font: inherit; max-width: 100%; }
+.reservas-error { margin: 0; color: var(--stage-curtain); font-weight: 700; }
+.reservas-live { min-height: 1.5rem; margin: 0; font-weight: 700; color: var(--stage-ink); }
+.reservas-ref { display: inline-block; max-width: 100%; overflow-wrap: anywhere; padding: .25rem .5rem; background: #fff; color: var(--stage-ink); border: 1px solid var(--stage-line); border-radius: var(--stage-radius); }
+.reservas-mine { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--stage-gap); }
+.reservas-actions { margin-top: .5rem; }
+.reservas-manual { display: grid; gap: var(--stage-gap); border-top: 1px solid var(--stage-line); padding-top: var(--stage-gap); }
+.reservas .stage-badge { position: static; display: inline-block; }
+.reservas-out, .reservas-state { background: var(--stage-wine); color: var(--stage-ivory); }
+.reservas-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.reservas button:focus-visible, .reservas input:focus-visible, .reservas select:focus-visible, .reservas h2:focus-visible { outline: 3px solid var(--stage-gold); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .reservas *, .reservas *::before, .reservas *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

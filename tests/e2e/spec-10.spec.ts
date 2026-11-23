@@ -7,7 +7,7 @@ for (const width of [375, 1440]) {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: 'La ciudad abre el telón' })).toBeVisible();
     const carousel = page.getByRole('region', { name: 'Cartel de escenas' });
-    const slides = ['#seleccion', '/espacios', '/rutas'];
+    const slides = ['/agenda', '/espacios', '/rutas'];
     for (const [i, href] of slides.entries()) {
       await carousel.getByRole('button', { name: 'Ir a escena ' + (i + 1) }).click();
       await expect(carousel.getByRole('link')).toHaveAttribute('href', href);

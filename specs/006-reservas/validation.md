@@ -71,3 +71,7 @@ CI Linux (pull_request, ejecución 45201517219) falló solo en `tests/e2e/spec-1
 | `.\fiavl.cmd check` | salida 0: lint, tipos, Node 35 de 35, build, Playwright 33 de 33 (51,5 s) |
 | Revisión visual de Reservas a 375 y 1440 px | NO VERIFICADO (sin navegador interactivo; solo las comprobaciones automáticas de desbordamiento y foco de spec-06) |
 | Contrastes M2/B1 | Calculados a partir de los tokens, no medidos en navegador |
+
+### Regresión en CI Linux causada por B1 y su corrección
+
+Tras el primer push (159614e), Linux (push y pull_request, ejecuciones 45242849204 y 45242861927) falló en `spec-06.spec.ts:142` (desbordamiento horizontal a 375 px); spec-10 pasó y Windows pasó. Causa: los bordes de 2 px en los controles aumentaron su ancho intrínseco y, con las fuentes más anchas de Linux, la página superaba el viewport. Reproducido localmente forzando fuentes anchas a 375 px: con el CSS anterior scrollWidth 383 (Courier New) y 375 (Verdana); con el de 159614e, 385 y 376. Corrección en `reservas.css`: `min-width: 0` en panel y etiquetas, y `width: 100%; min-width: 0` en inputs/selects; con ella scrollWidth = 375 en Courier New, Verdana y Arial. Segundo `.\fiavl.cmd check`: salida 0, Node 35 de 35, Playwright 33 de 33 (51,5 s), lint, tipos y build correctos. La reproducción con fuentes anchas es una aproximación de Linux, no una ejecución en Linux.

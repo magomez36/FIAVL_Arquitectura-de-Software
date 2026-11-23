@@ -1,0 +1,67 @@
+/* Ámbito exclusivo de la guía: todo cuelga de .a11y-guide; no se toca html, body ni el shell. */
+.a11y-guide {
+  --a11y-bg: var(--stage-surface, #FFF9F0);
+  --a11y-fg: var(--stage-ink, #302237);
+  --a11y-muted: #4a3a52;
+  --a11y-line: var(--stage-line, #D8C7B7);
+  --a11y-accent: var(--stage-curtain, #852D45);
+  --a11y-card: #ffffff;
+  --a11y-focus: #005A6B;
+  --a11y-focus-halo: #ffffff;
+  --a11y-btn-bg: var(--stage-wine, #591C37);
+  --a11y-btn-fg: var(--stage-ivory, #F5EDE0);
+  --a11y-size: 1rem;
+  background: var(--a11y-bg); color: var(--a11y-fg);
+  font-size: var(--a11y-size); line-height: 1.6;
+  border: 1px solid var(--a11y-line); border-radius: var(--stage-radius, 8px);
+  padding: var(--stage-gap, 24px); margin-block: 20px; max-width: 100%; overflow-wrap: anywhere;
+}
+.a11y-guide[data-text-size="large"] { --a11y-size: 1.25rem; }
+.a11y-guide[data-text-size="xlarge"] { --a11y-size: 1.5rem; }
+.a11y-guide[data-contrast="high"] {
+  --a11y-bg: #0F0914; --a11y-fg: #FFFFFF; --a11y-muted: #FFFFFF; --a11y-line: #FFFFFF;
+  --a11y-accent: #FFD27A; --a11y-card: #000000; --a11y-focus: #FFD27A; --a11y-focus-halo: #000000;
+  --a11y-btn-bg: #FFD27A; --a11y-btn-fg: #0F0914;
+}
+.a11y-guide h1 { font: normal clamp(2rem, 4vw, 3rem)/1.15 Georgia, serif; margin: 0 0 .4em; }
+.a11y-guide h2 { font: normal 1.6em/1.2 Georgia, serif; margin: 1.4em 0 .5em; }
+.a11y-guide h3 { font: normal 1.3em/1.25 Georgia, serif; margin: 0 0 .4em; }
+.a11y-guide p, .a11y-guide li, .a11y-guide dd, .a11y-guide dt, .a11y-guide label, .a11y-guide legend { font-size: 1em; }
+.a11y-guide p { max-width: 70ch; }
+.a11y-guide small, .a11y-guide .a11y-muted { color: var(--a11y-muted); font-size: .9em; }
+.a11y-notice { border: 2px solid var(--a11y-accent); border-radius: 6px; padding: .8em 1em; margin: 1em 0; background: var(--a11y-card); }
+.a11y-warning { border-left: 6px solid var(--a11y-accent); }
+.a11y-guide :is(a, button, input, summary, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--a11y-focus); outline-offset: 3px; box-shadow: 0 0 0 6px var(--a11y-focus-halo);
+}
+.a11y-prefs { border: 1px solid var(--a11y-line); border-radius: 6px; padding: 1em; background: var(--a11y-card); }
+.a11y-prefs fieldset { border: 1px solid var(--a11y-line); border-radius: 6px; margin: 0 0 1em; padding: .6em 1em 1em; min-width: 0; }
+.a11y-prefs legend { font-weight: 700; padding-inline: .4em; }
+.a11y-options { display: flex; flex-wrap: wrap; gap: .6em; }
+.a11y-options label {
+  display: inline-flex; align-items: center; gap: .5em; min-height: 44px; padding: .3em .9em;
+  border: 2px solid var(--a11y-line); border-radius: 6px; cursor: pointer; background: var(--a11y-bg);
+}
+.a11y-options label:has(input:checked) { border-color: var(--a11y-accent); font-weight: 700; }
+.a11y-options input { width: 1.2em; height: 1.2em; accent-color: var(--a11y-accent); }
+.a11y-guide .a11y-btn {
+  min-height: 44px; padding: .5em 1.1em; border: 2px solid var(--a11y-btn-bg); border-radius: 4px;
+  background: var(--a11y-btn-bg); color: var(--a11y-btn-fg); font: 700 1em "Segoe UI", sans-serif; cursor: pointer;
+}
+.a11y-guide .a11y-btn:disabled { opacity: .75; cursor: not-allowed; }
+.a11y-search { display: block; width: 100%; max-width: 32em; min-height: 44px; margin: .4em 0 1em; padding: .5em .8em; font: inherit;
+  color: var(--a11y-fg); background: var(--a11y-card); border: 2px solid var(--a11y-line); border-radius: 6px; }
+.a11y-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18em), 1fr)); list-style: none; padding: 0; margin: 0; }
+.a11y-guide .stage-card { background: var(--a11y-card); border: 1px solid var(--a11y-line); padding: 1em; height: 100%; }
+.a11y-guide .stage-card dl { margin: 0; }
+.a11y-guide .stage-card dt { font-weight: 700; margin-top: .6em; }
+.a11y-guide .stage-card dd { margin: 0; }
+.a11y-guide .stage-badge { position: static; display: inline-block; margin-bottom: .6em; background: var(--a11y-btn-bg); color: var(--a11y-btn-fg); }
+.a11y-guide .status { background: var(--a11y-card); color: var(--a11y-fg); border: 2px solid var(--a11y-line); }
+.a11y-guide .status .action { background: var(--a11y-btn-bg); color: var(--a11y-btn-fg); min-height: 44px; }
+.a11y-guide .stage-card:hover { transform: none; box-shadow: none; }
+.a11y-two { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20em), 1fr)); }
+.a11y-two ul { padding-left: 1.2em; margin: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .a11y-guide, .a11y-guide * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

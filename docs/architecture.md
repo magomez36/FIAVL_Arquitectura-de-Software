@@ -18,7 +18,7 @@ React presenta los eventos en hora de Loja. En el servidor, Express traduce peti
 
 Web y API comparten los esquemas de `packages/contracts`. En `apps/api/src`, `server.ts` abre SQLite y `composition.ts` conecta `repositories/catalog.ts`, el servicio `catalog.ts` y la aplicación HTTP `app.ts`. El servicio declara la interfaz que implementa el repositorio. Este particionamiento técnico reúne las responsabilidades de transporte, negocio y datos de todo el catálogo. Un monolito modular agruparía esas responsabilidades dentro de módulos por dominio.
 
-Las nueve entradas de UI exportan ruta, etiqueta, disponibilidad y componente. Reservas y opiniones tienen un router, una entrada de composición y una prueba por propietario. En Spec 1 ambos namespaces responden 501. [Mapa de propiedad](../AGENTS.md).
+Las nueve entradas de UI exportan ruta, etiqueta, disponibilidad y componente. Reservas y opiniones tienen un router, una entrada de composición y una prueba por propietario. Spec 1 dejó ambos namespaces en 501; Reservas (Spec 6) ya implementa su contrato (docs/contracts.md) y Opiniones se rige por el suyo. [Mapa de propiedad](../AGENTS.md).
 
 ## Vista de procesos
 
@@ -40,4 +40,4 @@ El entorno local usa loopback. La ruta de base puede cambiarse con FIAVL_DB. El 
 
 ## Escenario +1
 
-Abrir la portada inicia la lectura de eventos. El repositorio reconstruye artistIds según orden de crédito, Express devuelve JSON y el navegador muestra los primeros tres eventos. Abrir /reservas presenta su disponibilidad; una llamada al namespace de escritura recibe 501. Reiniciar conserva las mismas fichas.
+Abrir la portada inicia la lectura de eventos. El repositorio reconstruye artistIds según orden de crédito, Express devuelve JSON y el navegador muestra los primeros tres eventos. Abrir /reservas presenta su disponibilidad; reservar y cancelar usan el namespace de escritura, que valida el aforo y persiste en SQLite. Reiniciar conserva las mismas fichas.

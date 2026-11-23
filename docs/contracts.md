@@ -11,7 +11,11 @@ Base de origen único `/api`. Todas las respuestas llevan JSON UTF-8. Visibilida
 | GET /api/artists/:id | 200, Artist | /api/artists/colectivo-umbral |
 | GET /api/venues | 200, Venue[], por id | 5 con seed |
 | GET /api/venues/:id | 200, Venue | /api/venues/teatro-del-sur |
-| Cualquier método /api/reservations o descendiente | 501 NOT_IMPLEMENTED | POST /api/reservations |
+| GET /api/reservations/availability | 200, plazas por evento | Ver «Reservas demostrativas» |
+| GET /api/reservations/availability/:eventId | 200, plazas de un evento | /api/reservations/availability/umbral-de-luz |
+| POST /api/reservations | 201, reserva con referencia y plazas restantes | {"eventId":"umbral-de-luz","quantity":2} |
+| GET /api/reservations/:reference | 200, reserva | Referencia devuelta al crear |
+| POST /api/reservations/:reference/cancel | 200, reserva cancelada (idempotente) | Referencia devuelta al crear |
 | POST /api/feedback | 201, {"accepted":true} | {"rating":4,"comment":"Buena experiencia"} |
 | GET /api/feedback/summary | 200, resumen de valoraciones | {"total":1,"distribution":[0,0,0,1,0],"average":4} |
 
@@ -81,7 +85,7 @@ Objetos de forma exacta. Todos los campos obligatorios y no nulos. Los textos de
 | 400 | INVALID_ID | Identificador mal formado |
 | 404 | NOT_FOUND | Ficha o ruta inexistente |
 | 500 | INTERNAL_ERROR | Fallo inesperado de lectura o validación del catálogo |
-| 501 | NOT_IMPLEMENTED | Namespace de reservas pendiente |
+| 501 | NOT_IMPLEMENTED | Reservado en el contrato; ya no lo emite ningún namespace |
 
 Ejemplo de `GET /api/events/desconocido`:
 
@@ -98,6 +102,22 @@ El inventario reproducible está en [fixtures.json](../apps/api/src/fixtures.jso
 ## Persistencia del navegador
 
 El módulo `apps/web/src/lib/storage.ts` guarda JSON por clave versionada: `fiavl:agenda:v1`, `fiavl:reservations:v1`, `fiavl:accessibility:v1` y `fiavl:feedback:v1`. Cada dueño define el contenido y el validador de lectura. La lectura devuelve undefined ante ausencia, corrupción o acceso bloqueado; la escritura informa éxito con un booleano.
+
+## Reservas demostrativas
+
+Reservas de aforo DEMO, no oficiales: sin cuentas, pagos ni datos personales. Detalle y pruebas en [specs/006-reservas](../specs/006-reservas/spec.md). Respuestas con `Cache-Control: no-store`.
+
+| Ruta | Cuerpo | Éxito | Errores |
+|---|---|---|---|
+| GET /api/reservations/availability | — | 200, `[{eventId, capacity, reserved, remaining, reservable}]` por startAt e id | — |
+| GET /api/reservations/availability/:eventId | — | 200, un objeto igual | 400 INVALID_ID, 404 NOT_FOUND |
+| POST /api/reservations | application/json, máximo 1 KiB, exactamente `{eventId, quantity}` con quantity entero de 1 a 10 | 201, `{reference, eventId, quantity, status:"active", createdAt, cancelledAt:null, remaining}` | 400 INVALID_INPUT (forma, JSON malformado, tipo o rango, campos extra, sin application/json), 404 NOT_FOUND (evento), 409 INVALID_INPUT (plazas insuficientes o agotadas), 413 INVALID_INPUT, 422 INVALID_INPUT (evento no reservable) |
+| GET /api/reservations/:reference | — | 200, `{reference, eventId, quantity, status, createdAt, cancelledAt}` | 400 INVALID_ID, 404 NOT_FOUND |
+| POST /api/reservations/:reference/cancel | — | 200, la reserva con `status:"cancelled"`. Repetir devuelve lo mismo y no libera plazas otra vez | 400 INVALID_ID, 404 NOT_FOUND |
+
+`remaining` es capacidad menos reservas activas, calculada en el servidor; `capacity` no son plazas disponibles. `reference` son 24 bytes aleatorios en base64url (32 caracteres) y es un secreto al portador: quien la conoce puede ver y cancelar esa reserva. La base guarda solo su SHA-256. 409 y 422 comparten `INVALID_INPUT` con `error.code`; los consumidores discriminan por el estado HTTP. Rutas no definidas bajo el namespace devuelven el 404 común. Las marcas de tiempo usan -05:00. No hay autenticación ni limitación de frecuencia.
+
+El navegador guarda en `fiavl:reservations:v1` `{"version":1,"items":[{"reference","eventId","quantity"}]}` (máximo 20, sin datos personales). Al ser la referencia un secreto, cualquier script de la misma origen puede leerla; es un riesgo aceptado en este prototipo.
 
 ## Encuesta de experiencia
 

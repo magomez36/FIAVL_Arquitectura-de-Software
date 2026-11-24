@@ -46,3 +46,9 @@ Añadir, duplicado (botón deshabilitado y `addId` idempotente), quitar, orden, 
 - `mi-agenda.css`: el título `h1` pasa de `--stage-ivory` (invisible sobre fondo marfil) a `--stage-ink`. Además, las tarjetas de Mi agenda tienen relleno (`--stage-gap`) para que el texto no toque el borde. La prueba estática de tokens usa `--stage-ink` en lugar de `--stage-ivory`.
 - Revisión visual (capturas con Playwright/Chromium en macOS, vista de `/mi-agenda` con dos eventos agregados): a 1440 px y a 375 px el título, los encabezados, las tarjetas, el aviso de solapamiento y los botones se leen y no hay desbordamiento horizontal. Revisión por una persona, lector de pantalla y movimiento reducido en navegador: NO VERIFICADOS.
 - Local: lint, typecheck y build salida 0; `npm test` 23 de 23; `npm run test:e2e` 30 de 30. GitHub Actions de este commit: NO consultado.
+
+## Actualización 23 de noviembre de 2026 · segunda sincronización con main (resultados LOCALES, macOS)
+- `origin/main` (64d2f8c, hasta el PR #8 Spec 9) integrado con `git merge --no-edit origin/main` (merge 8e04858), sin conflictos.
+- `npm ci`, lint, typecheck y build: salida 0. `npm test`: 44 de 44.
+- `npm run test:e2e`: 53 de 54. Falla `spec-06.spec.ts:142` («reservas: teclado completo…»): `Expected: not ""`, `Received: ""` en `getByLabel('Evento')` tras `ArrowDown` (línea 153). Falla 6 de 6 en la rama y 3 de 3 en un worktree limpio de `origin/main`, así que NO la introduce Mi agenda. Causa no demostrada; hipótesis: en macOS, `ArrowDown` sobre un `<select>` abre la lista en lugar de cambiar el valor. No se tocó (prueba de otro spec).
+- GitHub Actions (Windows y Linux) de este commit: NO consultado.

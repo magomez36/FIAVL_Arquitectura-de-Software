@@ -52,3 +52,13 @@ Añadir, duplicado (botón deshabilitado y `addId` idempotente), quitar, orden, 
 - `npm ci`, lint, typecheck y build: salida 0. `npm test`: 44 de 44.
 - `npm run test:e2e`: 53 de 54. Falla `spec-06.spec.ts:142` («reservas: teclado completo…»): `Expected: not ""`, `Received: ""` en `getByLabel('Evento')` tras `ArrowDown` (línea 153). Falla 6 de 6 en la rama y 3 de 3 en un worktree limpio de `origin/main`, así que NO la introduce Mi agenda. Causa no demostrada; hipótesis: en macOS, `ArrowDown` sobre un `<select>` abre la lista en lugar de cambiar el valor. No se tocó (prueba de otro spec).
 - GitHub Actions (Windows y Linux) de este commit: NO consultado.
+
+## Cierre del desarrollo definitivo · 24 de noviembre de 2026 (resultados LOCALES, macOS)
+- Base: `origin/main` = 64d2f8c ya integrado (0 commits de `main` sin incorporar; Specs 3, 6 y 9 presentes). Node 24.22.3, npm 11.17.0 (prefijo del README).
+- Contraste del foco (calculado): el anillo dorado `--stage-gold` daba 1,82:1 sobre `--stage-surface` y 1,64:1 sobre `--stage-ivory` (mínimo 3:1). Ahora el anillo es `--stage-wine` con doble anillo blanco: 12,19:1 y 10,98:1. Cambio solo en `mi-agenda.css`; los tokens globales no se tocaron.
+- Catálogo sin eventos: antes la sección «Agregar eventos» quedaba vacía sin explicación; ahora muestra «El catálogo no tiene eventos por ahora.».
+- Pruebas añadidas: unitarias (conflictos múltiples, desempate por ID sin mutar la entrada, foco sin dorado) y e2e (catálogo vacío, respuesta fuera de contrato con reintento, almacenamiento bloqueado al leer, teclado + foco visible + movimiento reducido, 320 px y 768 px sin desbordamiento).
+- Resultados: `verify-runtime`, lint, typecheck y build: salida 0. `npm test`: 46 de 46. `npm run test:e2e`: 57 de 58. Spec 5 e2e: 8 de 8. `spec-10 -g "escena automática" --repeat-each=15`: 15 de 15.
+- Falla conocida, ajena: `spec-06.spec.ts:142` (selector «Evento» vacío tras `ArrowDown`). Falla igual en un worktree limpio de `origin/main` en esta Mac; hipótesis no demostrada: comportamiento de `<select>` en macOS. No se tocó.
+- Verificación del foco: por estilo computado en Chromium (color, ancho, estilo); no se hizo captura visual del anillo ni revisión con lector de pantalla (NO VERIFICADO).
+- Spec Kit: helpers `.ps1` no ejecutados (no hay `pwsh` en macOS). GitHub Actions de este commit: se consulta aparte.

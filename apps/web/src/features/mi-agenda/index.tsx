@@ -56,6 +56,7 @@ function Page() {
         </StageCard></li>;
       })}</ol>}
       <StageHeading>Agregar eventos</StageHeading>
+      {catalog.events.length === 0 ? <Status message="El catálogo no tiene eventos por ahora."/> :
       <ol className="mi-agenda-list" aria-label="Eventos disponibles">{sortEvents(catalog.events).map(e => {
         const saved = ids.includes(e.id);
         return <li key={e.id}><StageCard>
@@ -64,7 +65,7 @@ function Page() {
           <StageButton disabled={saved} aria-label={`${saved ? 'Ya está en tu agenda' : 'Agregar'}: ${e.title}`} onClick={() => update(addId(ids, e.id))}>
             {saved ? 'Ya está en tu agenda' : 'Agregar'}</StageButton>
         </StageCard></li>;
-      })}</ol>
+      })}</ol>}
     </>}
   </StageSection>;
 }

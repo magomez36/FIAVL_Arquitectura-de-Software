@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import type { Event } from '@fiavl/contracts';
-import { addId, conflictsOf, overlaps, parseIds, removeId, resolveAgenda } from '../apps/web/src/features/mi-agenda/logic.ts';
+import { addId, conflictsOf, overlaps, parseIds, removeId, resolveAgenda, sortEvents } from '../apps/web/src/features/mi-agenda/logic.ts';
 
 const ev = (id: string, startAt: string, endAt: string): Event => ({
   id, title: 'T' + id, description: 'd', category: 'Danza', startAt, endAt,
@@ -43,4 +43,20 @@ test('estructura: Stage, tokens, foco, movimiento reducido y sin reservas', () =
   for (const token of ['--stage-gap', '--stage-radius', '--stage-gold', '--stage-ink']) assert.ok(css.includes(token));
   assert.match(css, /focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
+});
+
+test('conflictos múltiples y orden determinista con el mismo inicio', () => {
+  const d = ev('d', '2026-11-12T19:30:00-05:00', '2026-11-12T20:30:00-05:00');
+  assert.deepEqual(conflictsOf(b, [a, b, c, d]).map(e => e.id).sort(), ['a', 'c', 'd']);
+  assert.deepEqual(conflictsOf(a, [a, c]).length, 0);
+  const same = ev('z', a.startAt, a.endAt);
+  const input = [same, a];
+  assert.deepEqual(sortEvents(input).map(e => e.id), ['a', 'z']);
+  assert.deepEqual(input.map(e => e.id), ['z', 'a'], 'no muta la entrada');
+});
+test('el foco de Mi agenda no depende del dorado (contraste insuficiente)', () => {
+  const css = readFileSync(new URL('../apps/web/src/features/mi-agenda/mi-agenda.css', import.meta.url), 'utf8');
+  const focus = css.split('\n').find(l => l.includes('focus-visible')) ?? '';
+  assert.match(focus, /--stage-wine/);
+  assert.doesNotMatch(focus, /--stage-gold/);
 });

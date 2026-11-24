@@ -52,3 +52,46 @@ test('mi agenda: error con reintento y escritorio a 1440 px', async ({ page }) =
   await expect(page.getByRole('heading', { name: 'Agregar eventos' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+test('mi agenda: catálogo vacío y respuesta fuera de contrato', async ({ page }) => {
+  await page.route('**/api/events', r => r.fulfill({ json: [] }));
+  await page.goto('/mi-agenda');
+  await expect(page.getByText('El catálogo no tiene eventos por ahora.')).toBeVisible();
+  await expect(page.getByText('Tu agenda está vacía.')).toBeVisible();
+  await page.unroute('**/api/events');
+  await page.route('**/api/events', r => r.fulfill({ json: [{ id: 1 }] }));
+  await page.goto('/mi-agenda');
+  await expect(page.getByRole('alert')).toContainText('No se pudo cargar la programación.');
+  await expect(page.getByRole('button', { name: 'Reintentar' })).toBeVisible();
+});
+
+test('mi agenda: almacenamiento bloqueado también al leer', async ({ page }) => {
+  await page.addInitScript(() => { Storage.prototype.getItem = () => { throw new Error('bloqueado'); }; });
+  await page.goto('/mi-agenda');
+  await expect(page.getByText('Tu agenda está vacía.')).toBeVisible();
+});
+
+test('mi agenda: teclado, foco visible y movimiento reducido', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/mi-agenda');
+  const add = page.getByRole('button', { name: 'Agregar: Umbral de luz' });
+  await add.focus();
+  await expect(add).toBeFocused();
+  const ring = await add.evaluate(el => { const s = getComputedStyle(el); return { style: s.outlineStyle, width: s.outlineWidth, color: s.outlineColor }; });
+  expect(ring.style).toBe('solid');
+  expect(ring.width).toBe('3px');
+  expect(ring.color).toBe('rgb(89, 28, 55)');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('list', { name: 'Eventos de mi agenda' }).getByRole('listitem')).toHaveCount(1);
+  const duration = await page.getByRole('button', { name: 'Quitar: Umbral de luz' }).evaluate(el => getComputedStyle(el).transitionDuration);
+  expect(duration).toMatch(/^0s(, 0s)*$/);
+});
+
+test('mi agenda: 320 px y anchura intermedia sin desbordamiento', async ({ page }) => {
+  for (const width of [320, 768]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/mi-agenda');
+    await expect(page.getByRole('heading', { name: 'Agregar eventos' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});

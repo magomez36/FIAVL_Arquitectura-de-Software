@@ -48,7 +48,7 @@ function Page() {
       </div> : <ol className="mi-agenda-list" aria-label="Eventos de mi agenda">{found.map(e => {
         const clashes = conflictsOf(e, found);
         return <li key={e.id}><StageCard>
-          <StageHeading>{e.title}</StageHeading>
+          <h3 className="mi-agenda-card-title">{e.title}</h3>
           <p><StageBadge>{e.category}</StageBadge></p>
           <p><time dateTime={e.startAt}>{formatTime(e.startAt)}</time> · {venueName.get(e.venueId)}</p>
           {clashes.length > 0 && <p role="status" className="mi-agenda-conflict">Se solapa con: {clashes.map(c => c.title).join(', ')}.</p>}
@@ -60,7 +60,7 @@ function Page() {
       <ol className="mi-agenda-list" aria-label="Eventos disponibles">{sortEvents(catalog.events).map(e => {
         const saved = ids.includes(e.id);
         return <li key={e.id}><StageCard>
-          <StageHeading>{e.title}</StageHeading>
+          <h3 className="mi-agenda-card-title">{e.title}</h3>
           <p><time dateTime={e.startAt}>{formatTime(e.startAt)}</time> · {venueName.get(e.venueId)}</p>
           <StageButton disabled={saved} aria-label={`${saved ? 'Ya está en tu agenda' : 'Agregar'}: ${e.title}`} onClick={() => update(addId(ids, e.id))}>
             {saved ? 'Ya está en tu agenda' : 'Agregar'}</StageButton>

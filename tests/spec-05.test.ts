@@ -40,7 +40,7 @@ test('estructura: Stage, tokens, foco, movimiento reducido y sin reservas', () =
   assert.match(page, /readLocal\('agenda'/);
   assert.match(page, /writeLocal\('agenda'/);
   assert.doesNotMatch(page, /localStorage|reservations|method: 'POST'/);
-  for (const token of ['--stage-gap', '--stage-radius', '--stage-gold', '--stage-ink']) assert.ok(css.includes(token));
+  for (const token of ['--stage-gap', '--stage-radius', '--stage-wine', '--stage-ink']) assert.ok(css.includes(token));
   assert.match(css, /focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
 });
@@ -59,4 +59,14 @@ test('el foco de Mi agenda no depende del dorado (contraste insuficiente)', () =
   const focus = css.split('\n').find(l => l.includes('focus-visible')) ?? '';
   assert.match(focus, /--stage-wine/);
   assert.doesNotMatch(focus, /--stage-gold/);
+});
+test('títulos de tarjeta como h3 y borde de conflicto con tokens de contraste suficiente', () => {
+  const dir = '../apps/web/src/features/mi-agenda/';
+  const page = readFileSync(new URL(dir + 'index.tsx', import.meta.url), 'utf8');
+  const css = readFileSync(new URL(dir + 'mi-agenda.css', import.meta.url), 'utf8');
+  assert.equal(page.match(/<h3 className="mi-agenda-card-title">\{e\.title\}<\/h3>/g)?.length, 2);
+  assert.doesNotMatch(page, /<StageHeading>\{e\.title\}/);
+  const conflict = css.split('\n').find(l => l.includes('.mi-agenda-conflict')) ?? '';
+  assert.match(conflict, /border-left: 4px solid var\(--stage-wine\)/);
+  assert.doesNotMatch(conflict, /--stage-gold/);
 });

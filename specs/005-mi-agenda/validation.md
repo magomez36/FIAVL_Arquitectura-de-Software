@@ -62,3 +62,25 @@ Añadir, duplicado (botón deshabilitado y `addId` idempotente), quitar, orden, 
 - Falla conocida, ajena: `spec-06.spec.ts:142` (selector «Evento» vacío tras `ArrowDown`). Falla igual en un worktree limpio de `origin/main` en esta Mac; hipótesis no demostrada: comportamiento de `<select>` en macOS. No se tocó.
 - Verificación del foco: por estilo computado en Chromium (color, ancho, estilo); no se hizo captura visual del anillo ni revisión con lector de pantalla (NO VERIFICADO).
 - Spec Kit: helpers `.ps1` no ejecutados (no hay `pwsh` en macOS). GitHub Actions de este commit: se consulta aparte.
+
+## Auditoría independiente y correcciones · 24 de noviembre de 2026 (VIGENTE para el SHA siguiente a 56b6700)
+Las secciones anteriores se conservan como historial; las líneas «GitHub Actions … NO consultado» de ellas quedaron superadas por los checks del PR #9.
+
+**Auditoría (SHA 56b6700, PR #9).** La hizo un agente nuevo, sin el contexto del desarrollo, en un clon limpio, con el prompt de auditoría del líder. Es independiente del autor del código, pero no es una revisión humana ni de otro modelo. Veredicto: APTO PARA PULL REQUEST, con tres observaciones no bloqueantes. Resultados que el auditor reportó: lint, typecheck y build salida 0; `npm test` 46/46; e2e 57/58 (solo `spec-06.spec.ts:142`); `spec-10 --repeat-each=10` 90/90; checks de push (run 45322093609) y de `pull_request` (run 45430429412) en verde en Linux y Windows.
+
+**Observaciones y su corrección** (solo `index.tsx`, `mi-agenda.css` y pruebas de Spec 5):
+- H1 (jerarquía): los títulos de tarjeta eran `h2` del tamaño de las secciones. Ahora son `h3` (`.mi-agenda-card-title`, 21,6 px a 375 px y 28 px a 1440 px, frente a 37,6 y 57,6 px de los `h2`). El `h1` y los dos `h2` («Tu programa», «Agregar eventos») no cambian.
+- H2 (contraste): el borde del aviso de solapamiento pasa de `--stage-gold` (1,64:1) a `--stage-wine` (10,98:1 sobre marfil, 12,19:1 sobre la tarjeta). No se añadieron tokens. `--stage-gold` ya no se usa en la hoja de Spec 5.
+- H3 (documentación): el diff de `tests/e2e/spec-10.spec.ts` contra `main` es vacío porque la estabilización ya estaba integrada en `main` (commit 159614e); no se eliminaron aserciones. Las referencias anteriores a un «cambio» en ese archivo describen esa estabilización, no un cambio pendiente de este PR.
+- Menor, sin cambio: sede inexistente muestra «· » sin nombre; el catálogo demo no tiene ese caso.
+
+**Pruebas añadidas:** unitaria de estructura (h3 en las dos listas, borde en vino, sin dorado) y e2e «jerarquía h1 > h2 > h3 y borde de conflicto en vino» (un `h1`, dos `h2`, un `h3` por tarjeta, borde `rgb(89, 28, 55)`, tamaño de `h3` menor que el de `h2`). La prueba de tokens usa ahora `--stage-wine` en lugar de `--stage-gold`.
+
+**Resultados LOCALES tras las correcciones (macOS, Node 24.21.0 con npm 11.17.0 del README):**
+- `npm run lint`, `typecheck`, `build`: salida 0. `npm test`: 47 de 47.
+- `npm run test:e2e`: 58 pasan y 1 falla. Spec 5 e2e: 9 de 9. La falla es `spec-06.spec.ts:142`.
+- Revisión visual con capturas de Chromium a 375 y 1440 px (`/mi-agenda` con dos eventos en conflicto): jerarquía legible, borde de conflicto en vino, sin desbordamiento. No se versionan.
+
+**Incidencia preexistente, no tocada:** `tests/e2e/spec-06.spec.ts:142` (selector «Evento» vacío tras `ArrowDown`) falla igual en `origin/main` limpio en macOS (también lo comprobó el auditor en un worktree limpio). Hipótesis no demostrada: comportamiento de `<select>` en macOS. En CI (Linux y Windows) pasa. Spec 6 y su prueba no se modificaron.
+
+**NO VERIFICADO:** lector de pantalla y revisión visual por una persona. GitHub Actions del commit de estas correcciones: ver el PR #9.

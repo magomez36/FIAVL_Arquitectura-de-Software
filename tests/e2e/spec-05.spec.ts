@@ -95,3 +95,22 @@ test('mi agenda: 320 px y anchura intermedia sin desbordamiento', async ({ page 
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
 });
+
+test('mi agenda: jerarquía h1 > h2 > h3 y borde de conflicto en vino', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/mi-agenda');
+  await page.getByRole('button', { name: 'Agregar: Umbral de luz' }).click();
+  await page.getByRole('button', { name: 'Agregar: El río suena' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+  await expect(page.getByRole('heading', { level: 2 })).toHaveText(['Tu programa', 'Agregar eventos']);
+  const cards = page.locator('.mi-agenda article');
+  expect(await cards.count()).toBeGreaterThan(2);
+  await expect(page.locator('.mi-agenda article h3')).toHaveCount(await cards.count());
+  const conflict = page.locator('.mi-agenda-conflict').first();
+  await expect(conflict).toHaveCSS('border-left-color', 'rgb(89, 28, 55)');
+  const sizes = await page.evaluate(() => ({
+    section: parseFloat(getComputedStyle(document.querySelector('.mi-agenda h2')!).fontSize),
+    card: parseFloat(getComputedStyle(document.querySelector('.mi-agenda article h3')!).fontSize)
+  }));
+  expect(sizes.card).toBeLessThan(sizes.section);
+});

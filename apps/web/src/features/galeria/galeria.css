@@ -1,0 +1,44 @@
+/* Ámbito /galeria. Solo tokens compartidos de «La ciudad abre el telón». */
+.galeria { display: block; }
+.galeria-lede { max-width: 62ch; margin: 0 0 1rem; color: var(--stage-ink); }
+.galeria .stage-heading { color: var(--stage-ink); font-size: clamp(1.7rem, 3vw, 2.5rem); margin-bottom: 12px; }
+.galeria-filters { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: 1rem .5rem; }
+.galeria-chip { min-height: 2.75rem; padding: .5rem 1rem; border: 2px solid var(--stage-wine); border-radius: var(--stage-radius);
+  background: var(--stage-surface); color: var(--stage-ink); font: 700 .95rem/1.2 "Segoe UI", system-ui, sans-serif; }
+.galeria-chip[aria-pressed="true"] { background: var(--stage-wine); color: var(--stage-ivory); }
+.galeria-count { margin: .75rem 0 1rem; color: var(--stage-ink); font-weight: 600; }
+.galeria-empty { background: var(--stage-surface); border: 1px solid var(--stage-line); border-radius: var(--stage-radius); padding: 1.5rem; color: var(--stage-ink); }
+.galeria-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--stage-gap);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+.galeria .stage-card { height: 100%; display: flex; flex-direction: column; overflow: hidden; color: var(--stage-ink); border: 1px solid var(--stage-line); }
+.galeria-media { position: relative; aspect-ratio: 4 / 3; background: var(--stage-night); }
+.galeria-thumb, .galeria-media .galeria-fallback { width: 100%; height: 100%; display: block; }
+.galeria-thumb { object-fit: cover; }
+.galeria .stage-badge { position: absolute; left: 12px; bottom: 10px; }
+.galeria-card-body { display: grid; gap: .5rem; padding: 1rem; align-content: start; flex: 1; }
+.galeria-card-body h3 { font: 700 1.25rem/1.2 Georgia, serif; margin: 0; }
+.galeria-card-body p { margin: 0; }
+.galeria-card-body .stage-button { justify-self: start; margin-top: .25rem; }
+.galeria-credit { display: block; font-size: .85rem; color: var(--stage-ink); overflow-wrap: anywhere; }
+.galeria-credit a { color: var(--stage-curtain); text-decoration: underline; text-underline-offset: 2px; }
+.galeria-fallback { display: grid; place-items: center; text-align: center; padding: 1rem; background: var(--stage-night); color: var(--stage-ivory); font-weight: 600; }
+.galeria-dialog { margin: auto; padding: 0; border: 0; border-radius: var(--stage-radius); background: var(--stage-surface); color: var(--stage-ink);
+  width: min(52rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow: auto; }
+.galeria-dialog::backdrop { background: rgb(22 14 28 / .8); }
+.galeria-dialog-body { display: grid; gap: 1rem; padding: 1rem; }
+.galeria-dialog-head { display: flex; justify-content: space-between; align-items: start; gap: 1rem; }
+.galeria-dialog-head h2 { font: 400 clamp(1.4rem, 3vw, 2rem)/1.15 Georgia, serif; margin: 0; }
+.galeria-dialog figure { margin: 0; display: grid; gap: .75rem; }
+.galeria-large { width: 100%; height: auto; max-height: 60dvh; object-fit: contain; background: var(--stage-night); border-radius: var(--stage-radius); }
+.galeria-large.galeria-fallback { min-height: 14rem; }
+.galeria-dialog figcaption { display: grid; gap: .5rem; position: static; background: none; color: var(--stage-ink); padding: 0; }
+.galeria-dialog figcaption p { margin: 0; }
+.galeria-dialog-nav { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+.galeria-dialog-nav p { margin: 0; font-weight: 600; }
+.galeria .stage-button:disabled, .galeria-dialog .stage-button:disabled { opacity: .7; cursor: default; }
+.galeria button:focus-visible, .galeria a:focus-visible, .galeria-dialog button:focus-visible, .galeria-dialog a:focus-visible,
+.galeria .stage-heading:focus-visible { outline: 3px solid var(--stage-wine); outline-offset: 3px; box-shadow: 0 0 0 6px var(--stage-surface); }
+.galeria .stage-card:hover { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .galeria *, .galeria *::before, .galeria *::after, .galeria-dialog, .galeria-dialog * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

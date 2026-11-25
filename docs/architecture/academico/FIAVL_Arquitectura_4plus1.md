@@ -2,11 +2,13 @@
 
 ## Arquitectura de software con el modelo 4+1
 
-**Asignatura** Arquitectura de Software<br/>
-**Institución** [Completar institución]<br/>
-**Docente** [Completar nombre del docente]<br/>
-**Integrantes** [Completar nombres y datos académicos]<br/>
-**Fecha de entrega** [Completar fecha]
+**Asignatura:** Arquitectura de Software<br/>
+
+**Integrantes:** <br/>
+
+- Valentina Samaniego
+- Davide Manotoa
+- Manuel Gomez
 
 **Implementación de referencia** `ff11546da61896fc7f6d363f63ebb793aed2f3ea`
 

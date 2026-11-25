@@ -1,43 +1,22 @@
-# Arquitectura preliminar · vistas 4+1
+# Arquitectura de FIAVL Explora · Modelo 4+1
 
-FIAVL Explora usa arquitectura en capas (Layered Architecture), implementada mediante un modelo cliente-servidor con tres capas lógicas de presentación, negocio y persistencia.
+**Implementación modelada** `ff11546da61896fc7f6d363f63ebb793aed2f3ea` de `main`, con las diez especificaciones integradas.
 
-## Vista lógica
+FIAVL Explora emplea arquitectura en capas dentro de un modelo cliente-servidor. React y los adaptadores HTTP componen la presentación. Los servicios de catálogo, reservas y feedback aplican las reglas de negocio. Los repositorios acceden a SQLite embebido en Node.js. Web y API comparten contratos Zod mediante npm workspaces e intercambian JSON por HTTP. [ADR](adr.md), [contratos](contracts.md), [constitución](../.specify/memory/constitution.md).
 
-```mermaid
-flowchart LR
-  W["Presentación · React"] -->|"HTTP /api"| H["Adaptador HTTP · Express"]
-  H --> A["Negocio · operaciones de catálogo"]
-  A -->|"interfaz de repositorio"| R["Persistencia · repositorio de catálogo"]
-  R -->|"SQL"| D[("SQLite")]
-```
+| Vista | Alcance | Diagramas |
+|---|---|---:|
+| [01 Lógica](architecture/01-vista-logica.md) | Dominio, relaciones, DTO y datos del navegador | 1 |
+| [02 Desarrollo](architecture/02-vista-desarrollo.md) | Responsabilidades de componentes, paquetes y dependencias | 2 |
+| [03 Procesos](architecture/03-vista-procesos/README.md) | 22 secuencias funcionales, 1 técnica de concurrencia y 5 actividades | 28 |
+| [04 Física](architecture/04-vista-fisica.md) | Despliegue local, Vite, Express, SQLite y arranque | 1 |
+| [05 Escenarios (+1)](architecture/05-vista-escenarios.md) | Dos roles, límite del sistema y catálogo de 22 objetivos | 1 |
+| | **Total** | **33** |
 
-React presenta los eventos en hora de Loja. En el servidor, Express traduce peticiones y resultados a HTTP. El servicio decide si una identidad es inválida o una ficha está ausente y comprueba la lectura antes de declarar salud. El repositorio ejecuta SQL y convierte filas a los contratos públicos con Zod. SQLite conserva la edición y aplica las claves foráneas.
+- [Matriz definitiva de trazabilidad](architecture/06-matriz-trazabilidad.md).
+- [Análisis de base](architecture/analysis/01-inventario-arquitectonico.md), [actores y casos detallados](architecture/analysis/02-actores-y-casos-de-uso.md), [base de trazabilidad](architecture/analysis/03-matriz-trazabilidad.md), [inventario de diagramas y rutas](architecture/analysis/04-inventario-diagramas.md) y [hallazgos](architecture/analysis/05-hallazgos-y-limitaciones.md).
+- [Documento académico consolidado](architecture/academico/FIAVL_Arquitectura_4plus1.md) y [borrador PDF](architecture/academico/FIAVL_Arquitectura_4plus1.pdf).
+- [Originales Mermaid](architecture/diagrams), [diagramas SVG](architecture/rendered/svg) y [respaldo PNG](architecture/rendered/png).
+- [Validación documental y reproducción del render](architecture/validation.md).
 
-## Vista de desarrollo
-
-Web y API comparten los esquemas de `packages/contracts`. En `apps/api/src`, `server.ts` abre SQLite y `composition.ts` conecta `repositories/catalog.ts`, el servicio `catalog.ts` y la aplicación HTTP `app.ts`. El servicio declara la interfaz que implementa el repositorio. Este particionamiento técnico reúne las responsabilidades de transporte, negocio y datos de todo el catálogo. Un monolito modular agruparía esas responsabilidades dentro de módulos por dominio.
-
-Las nueve entradas de UI exportan ruta, etiqueta, disponibilidad y componente. Reservas y opiniones tienen un router, una entrada de composición y una prueba por propietario. Spec 1 dejó ambos namespaces en 501; Reservas (Spec 6) ya implementa su contrato (docs/contracts.md) y Opiniones se rige por el suyo. [Mapa de propiedad](../AGENTS.md).
-
-## Vista de procesos
-
-El navegador solicita `/api/events` de forma asíncrona. El handler llama al servicio y el repositorio lee mediante la conexión abierta al arrancar. Las escrituras de migración y seed usan BEGIN IMMEDIATE con rollback y espera limitada por bloqueo. La portada anuncia carga, vacío o fallo y permite un nuevo intento.
-
-## Vista física
-
-```mermaid
-flowchart LR
-  B["Navegador"] --> V["Vite · desarrollo · 5173"]
-  subgraph API["Proceso backend Node.js"]
-    E["Express · 3001"] --> S["Motor SQLite embebido"]
-  end
-  V -->|"proxy /api"| E
-  S --> F[("Archivo local fiavl.sqlite")]
-```
-
-El entorno local usa loopback. La ruta de base puede cambiarse con FIAVL_DB. El build crea apps/web/dist y apps/api/dist. El JavaScript compilado del servidor requiere las migraciones y el workspace contracts junto a la aplicación.
-
-## Escenario +1
-
-Abrir la portada inicia la lectura de eventos. El repositorio reconstruye artistIds según orden de crédito, Express devuelve JSON y el navegador muestra los primeros tres eventos. Abrir /reservas presenta su disponibilidad; reservar y cancelar usan el namespace de escritura, que valida el aforo y persiste en SQLite. Reiniciar conserva las mismas fichas.
+La [arquitectura preliminar](https://github.com/magomez36/FIAVL_Arquitectura-de-Software/blob/ff11546da61896fc7f6d363f63ebb793aed2f3ea/docs/architecture.md) se conserva en el historial del repositorio. El [modelo de vistas de Philippe Kruchten](https://arxiv.org/abs/2006.04975) organiza la documentación actual.

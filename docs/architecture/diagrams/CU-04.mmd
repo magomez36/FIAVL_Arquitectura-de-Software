@@ -1,0 +1,16 @@
+sequenceDiagram
+actor V as Visitante
+participant U as Agenda
+participant M as Catálogo en memoria
+V->>U: Activar Ver detalle en una tarjeta visible
+U->>U: Cambiar selected y aria-expanded
+alt Ficha abierta
+  U->>M: Resolver artista y sede por ID
+  M-->>U: Nombres disponibles
+  U-->>V: Descripción, disciplina, horario, sede y precio
+  opt Sin nombres de artistas resueltos
+    U-->>V: Por confirmar
+  end
+else Misma ficha ya abierta
+  U-->>V: Colapsar el detalle
+end

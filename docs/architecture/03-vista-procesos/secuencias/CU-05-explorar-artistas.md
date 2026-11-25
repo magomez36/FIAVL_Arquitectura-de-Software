@@ -1,0 +1,55 @@
+# CU-05 · Explorar el catálogo de artistas
+
+**Actor** Visitante (ACT-01). **Spec** 3. Encontrar artistas por nombre, país o disciplina.
+
+<!-- diagram: CU-05 -->
+
+```mermaid
+sequenceDiagram
+actor V as Visitante
+participant U as Artistas
+participant H as getResource
+participant A as API de catálogo
+participant D as SQLite
+V->>U: Abrir /artistas
+loop Carga inicial o reintento solicitado
+  U-->>V: Anunciar carga
+  U->>H: Iniciar lecturas con Promise.all
+  par artists
+    H-)A: GET /api/artists
+  and events
+    H-)A: GET /api/events
+  and venues
+    H-)A: GET /api/venues
+  end
+  loop Para cada petición recibida
+    A->>D: Leer colección vía repositorio
+    D-->>A: Filas
+    A-->>H: JSON o error
+  end
+  H->>H: Comprobar estado y validar esquema
+  alt HTTP, JSON o contrato inválido
+    H-->>U: Rechazar lectura
+    U-->>V: Mostrar error y ofrecer reintento
+  else Lectura vigente
+    H-->>U: Datos validados
+    alt Lista de artistas vacía
+      U-->>V: Mostrar estado vacío
+    else Con fichas
+      U-->>V: Presentar artistas, países y disciplinas
+      loop Cambiar criterios
+        V->>U: Buscar, aplicar filtros o limpiar
+        U->>U: filterArtists por nombre, país y disciplina
+        U-->>V: Resultados y contador o sin coincidencias
+      end
+    end
+  end
+end
+opt Efecto sustituido o desmontado
+  U->>H: Abortar lecturas pendientes
+end
+```
+
+Lectura SQLite; filtros en memoria.
+
+[Catálogo detallado](../../analysis/02-actores-y-casos-de-uso.md) · [Vista de procesos](../README.md).

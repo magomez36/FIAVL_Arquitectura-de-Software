@@ -1,0 +1,55 @@
+# CU-14 · Cancelar una reserva mediante referencia
+
+**Actor** Visitante (ACT-01). **Spec** 6. Liberar las plazas de una reserva cuya referencia posee.
+
+<!-- diagram: CU-14 -->
+
+```mermaid
+sequenceDiagram
+actor V as Visitante
+participant U as Reservas
+participant A as Router de reservas
+participant S as Servicio de reservas
+participant R as Repositorio de reservas
+participant D as SQLite
+V->>U: Cancelar desde lista o enviar referencia manual
+alt Referencia manual vacía
+  U-->>V: Pedir referencia
+else Se envía una referencia
+  U-)A: POST /api/reservations/:reference/cancel
+  A->>S: cancel(reference)
+  S->>S: Validar formato
+  alt Formato inválido
+    A-->>U: 400 INVALID_ID
+  else Referencia válida
+    S->>R: atomically
+    R->>D: BEGIN IMMEDIATE y SELECT por hash
+    D-->>R: Estado o ausencia
+    alt Reserva activa
+      R->>D: UPDATE condicional con fecha y SELECT final
+      R->>D: COMMIT
+      A-->>U: 200 reserva cancelada
+    else Ya cancelada
+      R->>D: Leer el estado previo y COMMIT
+      A-->>U: 200 sin repetir la actualización
+    else Desconocida
+      R->>D: COMMIT sin cambios
+      A-->>U: 404 NOT_FOUND
+    else Excepción tras BEGIN
+      R->>D: ROLLBACK
+      A-->>U: 500 INTERNAL_ERROR
+    end
+  end
+  alt Respuesta válida de éxito
+    U-->>V: Anunciar cancelación
+    U-)A: GET /api/reservations/availability
+    A-->>U: Saldo sin plazas canceladas
+  else Error
+    U-->>V: Mostrar mensaje del formulario o de operación
+  end
+end
+```
+
+Actualización SQLite; cancelar no borra la referencia local.
+
+[Catálogo detallado](../../analysis/02-actores-y-casos-de-uso.md) · [Vista de procesos](../README.md).

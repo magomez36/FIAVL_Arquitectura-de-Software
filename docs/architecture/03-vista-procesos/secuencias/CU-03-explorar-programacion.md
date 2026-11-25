@@ -1,0 +1,54 @@
+# CU-03 · Explorar la programación cultural
+
+**Actor** Visitante (ACT-01). **Spec** 2. Localizar eventos demo por interés, fecha, categoría o precio.
+
+<!-- diagram: CU-03 -->
+
+```mermaid
+sequenceDiagram
+actor V as Visitante
+participant U as Agenda
+participant H as getResource
+participant A as API de catálogo
+participant D as SQLite
+V->>U: Abrir /agenda
+loop Carga inicial o reintento solicitado
+  U-->>V: Anunciar carga
+  U->>H: Iniciar lecturas con Promise.all
+  par events
+    H-)A: GET /api/events
+  and artists
+    H-)A: GET /api/artists
+  and venues
+    H-)A: GET /api/venues
+  end
+  loop Para cada petición recibida
+    A->>D: Leer colección vía repositorio
+    D-->>A: Filas
+    A-->>H: JSON o error
+  end
+  H->>H: Comprobar estado y validar esquema
+  alt HTTP, JSON o contrato inválido
+    H-->>U: Rechazar lectura
+    U-->>V: Mostrar error y ofrecer reintento
+  else Lectura vigente
+    H-->>U: Datos validados
+    U-->>V: Mostrar filtros, contador y resultados
+    loop Cambiar búsqueda, fecha, categoría o precio
+      V->>U: Aplicar criterio o limpiar
+      U->>U: filterEvents combina criterios y ordena inicio/ID
+      U-->>V: Lista actualizada
+    end
+    opt Cero eventos o sin coincidencias
+      U-->>V: Mostrar aviso de lista vacía
+    end
+  end
+end
+opt Efecto sustituido o desmontado
+  U->>H: Abortar lecturas pendientes
+end
+```
+
+Lectura SQLite, filtros en memoria.
+
+[Catálogo detallado](../../analysis/02-actores-y-casos-de-uso.md) · [Vista de procesos](../README.md).

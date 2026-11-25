@@ -1,0 +1,119 @@
+---
+config:
+  theme: neutral
+---
+classDiagram
+direction LR
+class Evento {
+  <<entidad>>
+  +string id
+  +string title
+  +string description
+  +string category
+  +string startAt
+  +string endAt
+  +string venueId
+  +string[] artistIds
+  +int priceCents
+  +int capacity
+  +boolean reservable
+  +string image
+}
+class Artista {
+  <<entidad>>
+  +string id
+  +string name
+  +string bio
+  +string country
+  +string discipline
+  +string image
+}
+class Sede {
+  <<entidad>>
+  +string id
+  +string name
+  +string address
+  +string description
+  +string accessibilityNotes
+  +string image
+}
+class Credito {
+  <<asociacionPersistente>>
+  +string eventId
+  +string artistId
+  +int position
+}
+class Reserva {
+  <<entidad>>
+  +int id
+  +string referenceHash
+  +string eventId
+  +int quantity
+  +string status
+  +string createdAt
+  +string cancelledAt
+}
+class Valoracion {
+  <<entidad>>
+  +int id
+  +int rating
+  +string comment
+}
+class Disponibilidad {
+  <<proyeccion>>
+  +string eventId
+  +int capacity
+  +int reserved
+  +int remaining
+  +boolean reservable
+}
+class ResumenValoraciones {
+  <<proyeccion>>
+  +int total
+  +int[5] distribution
+  +number average
+}
+class AgendaLocal {
+  <<navegador>>
+  +string[] eventIds
+}
+class ReferenciasLocales {
+  <<navegador>>
+  +int version
+  +StoredItem[] items
+}
+class PreferenciasLectura {
+  <<navegador>>
+  +int version
+  +TextSize textSize
+  +Contrast contrast
+}
+class RecorridoEditorial {
+  <<navegador>>
+  +string name
+  +string purpose
+  +string[] stops
+}
+class ImagenGaleria {
+  <<navegador>>
+  +string id
+  +string category
+  +string title
+  +string caption
+  +string alt
+  +string src
+  +int width
+  +int height
+  +Credit credit
+}
+Sede "1" -- "0..*" Evento : aloja
+Evento "1" -- "0..*" Credito : ordena
+Artista "1" -- "0..*" Credito : participa
+Evento "1" -- "0..*" Reserva : admite
+Disponibilidad ..> Evento : proyecta capacidad
+Disponibilidad ..> Reserva : agrega activas
+ResumenValoraciones ..> Valoracion : agrega por rating
+AgendaLocal ..> Evento : resuelve IDs sin FK
+ReferenciasLocales ..> Reserva : resuelve por referencia
+RecorridoEditorial ..> Sede : resuelve paradas por ID
+ImagenGaleria ..> Sede : proyecta algunas fichas

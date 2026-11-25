@@ -1,0 +1,57 @@
+# CU-07 · Encontrar una sede en el directorio demo
+
+**Actor** Visitante (ACT-01). **Spec** 4. Localizar una sede por nombre o dirección.
+
+<!-- diagram: CU-07 -->
+
+```mermaid
+---
+config:
+  theme: neutral
+---
+sequenceDiagram
+actor V as Visitante
+participant U as Espacios
+participant H as getResource
+participant A as API de catálogo
+participant D as SQLite
+V->>U: Abrir /espacios
+loop Carga inicial o reintento solicitado
+  U-->>V: Anunciar carga
+  U->>H: Iniciar lecturas con Promise.all
+  par venues
+    H-)A: GET /api/venues
+  and events
+    H-)A: GET /api/events
+  end
+  loop Para cada petición recibida
+    A->>D: Leer colección vía repositorio
+    D-->>A: Filas
+    A-->>H: JSON o error
+  end
+  H->>H: Comprobar estado y validar esquema
+  alt HTTP, JSON o contrato inválido
+    H-->>U: Rechazar lectura
+    U-->>V: Mostrar error y ofrecer reintento
+  else Lectura vigente
+    H-->>U: Datos validados
+    alt Directorio sin sedes
+      U-->>V: Mostrar estado vacío
+    else Con fichas
+      U-->>V: Mostrar directorio demo
+      loop Cambiar búsqueda
+        V->>U: Buscar por nombre o dirección
+        U->>U: Normalizar y filtrar en memoria
+        U-->>V: Sedes coincidentes o aviso
+      end
+    end
+  end
+end
+opt Efecto sustituido o desmontado
+  U->>H: Abortar lecturas pendientes
+end
+```
+
+Lectura SQLite, consulta en memoria.
+
+[Catálogo detallado](../../analysis/02-actores-y-casos-de-uso.md) · [Vista de procesos](../README.md).

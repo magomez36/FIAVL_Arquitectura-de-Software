@@ -1,0 +1,21 @@
+---
+config:
+  theme: neutral
+---
+flowchart TD
+  I([Inicio]) --> R["Leer localStorage al abrir la guía"]
+  R --> J{"¿Valor recuperado?"}
+  J -->|Esquema válido| P["Aplicar y anunciar restauración"]
+  J -->|JSON legible, esquema inválido| C["Aplicar predeterminados y avisar corrupción"]
+  J -->|Ausente, no parseable o bloqueado| N["Aplicar predeterminados"]
+  P --> E{"¿Acción en controles?"}
+  C --> E
+  N --> E
+  E -->|Cambiar tamaño o contraste| A["Aplicar opción en data-*"]
+  E -->|Restablecer habilitado| B["Aplicar tamaño y contraste predeterminados"]
+  E -->|Salir| F([Fin])
+  A --> W["Intentar guardar objeto versión 1"]
+  B --> W
+  W --> S{"¿Escritura correcta?"}
+  S -->|Sí| O["Anunciar cambio y retirar aviso de corrupción"] --> E
+  S -->|No| G["Anunciar bloqueo y mantener aviso previo si existe"] --> E

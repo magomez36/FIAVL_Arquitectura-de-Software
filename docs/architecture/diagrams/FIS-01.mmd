@@ -1,0 +1,32 @@
+---
+config:
+  theme: neutral
+---
+flowchart TB
+  subgraph HOST["Computadora anfitriona"]
+    direction TB
+    BOOT["fiavl.cmd → bootstrap.ps1<br/>runtime, npm ci y db:seed"]
+    subgraph B["Navegador"]
+      APP["React, Router y JS/CSS<br/>Origen 127.0.0.1:5173"]
+      LS[("localStorage del origen")]
+      APP --> LS
+    end
+    VITE["Proceso Vite · desarrollo o preview<br/>127.0.0.1:5173 · strictPort"]
+    subgraph N["Proceso Node.js · backend"]
+      HTTP["Express · 127.0.0.1:3001"]
+      SQLITE["node:sqlite · DatabaseSync"]
+      HTTP -->|llamadas síncronas| SQLITE
+    end
+    FILE[("apps/api/data/fiavl.sqlite<br/>o ruta FIAVL_DB")]
+    WEB["apps/web/dist/<br/>HTML, JS, CSS y recursos"]
+    API["apps/api/dist/<br/>JavaScript ESM"]
+    MIG["apps/api/migrations/ y<br/>workspace @fiavl/contracts"]
+    BOOT -.->|"modo inicio"| VITE
+    BOOT -.->|"modo inicio"| HTTP
+    APP <-->|"HTTP: documento, recursos y /api"| VITE
+    VITE ==>|"proxy /api · HTTP JSON"| HTTP
+    SQLITE -->|I/O de archivo| FILE
+    WEB -.->|servido en preview| VITE
+    API -.->|entrada compilada opcional| HTTP
+    MIG -.->|"carga al arrancar / imports"| HTTP
+  end

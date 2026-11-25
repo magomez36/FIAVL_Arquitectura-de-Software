@@ -1,0 +1,35 @@
+---
+config:
+  theme: neutral
+---
+flowchart TB
+  subgraph W["Presentación · navegador"]
+    direction TB
+    APP["React Router, portada y nueve páginas<br/>Stage, Status y guía editorial"]
+    CLIENT["Adaptadores HTTP<br/>getResource, postJson y fetch"]
+    STORE["readLocal y writeLocal"]
+    LS[("localStorage · 3 claves activas")]
+    APP --> CLIENT
+    APP --> STORE --> LS
+  end
+  subgraph B["Servidor · proceso Node.js"]
+    direction TB
+    HT["Express · catálogo, reservas y feedback"]
+    CAT["Servicio de catálogo"]
+    RES["Servicio de reservas"]
+    FEE["Servicio de feedback"]
+    RC["Repositorio de catálogo"]
+    RR["Repositorio de reservas"]
+    RF["Repositorio de feedback"]
+    DB[("SQLite embebido")]
+    COM["Composición raíz"]
+    HT --> CAT --> RC --> DB
+    HT --> RES --> RR --> DB
+    HT --> FEE --> RF --> DB
+    COM -.->|"inyecta operaciones"| HT
+    COM -.->|"conecta servicios y repositorios"| RES
+  end
+  Z["Biblioteca Zod y DTO<br/>@fiavl/contracts"]
+  CLIENT ==>|"HTTP /api · JSON"| HT
+  W -.->|"importa esquemas y tipos"| Z
+  B -.->|"importa esquemas y tipos"| Z

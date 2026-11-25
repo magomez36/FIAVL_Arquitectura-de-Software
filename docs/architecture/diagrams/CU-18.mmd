@@ -1,0 +1,39 @@
+---
+config:
+  theme: neutral
+---
+sequenceDiagram
+actor V as Visitante
+participant U as Guía de accesibilidad
+participant H as getResource
+participant A as API de catálogo
+participant D as SQLite
+V->>U: Abrir /accesibilidad
+loop Carga inicial o reintento solicitado
+  U-->>V: Anunciar carga
+  U->>H: Solicitar venues
+  H-)A: GET /api/venues
+  A->>D: Leer colección
+  D-->>A: Filas
+  A-->>H: JSON o error
+  H->>H: Comprobar estado y validar esquema
+  alt HTTP, JSON o contrato inválido
+    H-->>U: Rechazar lectura
+    U-->>V: Mostrar error y ofrecer reintento
+  else Lectura vigente
+    H-->>U: Datos validados
+    alt Catálogo de sedes vacío
+      U-->>V: Mostrar estado vacío
+    else Con fichas
+      U-->>V: Mostrar notas y direcciones demo
+      loop Buscar o limpiar
+        V->>U: Introducir texto
+        U->>U: filterVenues normaliza nombre, dirección y notas
+        U-->>V: Coincidencias o aviso de búsqueda vacía
+      end
+    end
+  end
+end
+opt Efecto sustituido o desmontado
+  U->>H: Abortar lecturas pendientes
+end

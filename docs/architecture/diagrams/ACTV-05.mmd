@@ -1,0 +1,22 @@
+---
+config:
+  theme: neutral
+---
+flowchart TD
+  I([Inicio]) --> E["Elegir puntuación y escribir comentario opcional"]
+  E --> C{"¿Cumple el esquema en el navegador?"}
+  C -->|No| O["Mostrar indicación de corrección"] --> E
+  C -->|Sí| P["Bloquear envío mientras espera y enviar POST /api/feedback"]
+  P --> B{"¿JSON válido, límite 8 KiB y esquema válido?"}
+  B -->|No| R["400 o 413"]
+  B -->|Sí| K["INSERT rating y comentario recortado o NULL"]
+  K --> M{"¿INSERT correcto?"}
+  M -->|Sí| S["201 con accepted: true"]
+  M -->|No| T["500"]
+  S --> Q{"¿El navegador verifica el recibo?"}
+  R --> X["Mostrar aviso; permitir reintento"]
+  T --> X
+  Q -->|No| X
+  Q -->|Sí| A["Confirmar y disparar lectura del resumen"] --> F([Fin])
+  X -->|Corregir o reintentar| E
+  X -->|Salir| F

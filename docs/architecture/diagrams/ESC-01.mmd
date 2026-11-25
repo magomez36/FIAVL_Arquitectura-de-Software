@@ -1,0 +1,63 @@
+---
+config:
+  theme: neutral
+---
+flowchart LR
+  V["ACT-01 · Visitante"]
+  T["ACT-02 · Integrante técnico"]
+  subgraph FI["FIAVL Explora"]
+    subgraph IN["Edición y catálogo"]
+      CU01(["CU-01<br/>Descubrir la edición demo"])
+      CU02(["CU-02<br/>Consultar el catálogo mediante la API pública"])
+      CU20(["CU-20<br/>Consultar la guía editorial del FIAVL 2026"])
+    end
+    subgraph EX["Agenda, artistas y sedes"]
+      CU03(["CU-03<br/>Explorar la programación cultural"])
+      CU04(["CU-04<br/>Consultar el detalle de un evento"])
+      CU05(["CU-05<br/>Explorar el catálogo de artistas"])
+      CU06(["CU-06<br/>Consultar la trayectoria y actuaciones de un artista"])
+      CU07(["CU-07<br/>Encontrar una sede en el directorio demo"])
+      CU08(["CU-08<br/>Consultar una sede demo y sus actividades"])
+    end
+    subgraph PL["Planificación y reservas"]
+      CU09(["CU-09<br/>Armar mi agenda personal"])
+      CU10(["CU-10<br/>Revisar mi programa y sus solapamientos"])
+      CU11(["CU-11<br/>Consultar plazas disponibles"])
+      CU12(["CU-12<br/>Reservar plazas demostrativas"])
+      CU13(["CU-13<br/>Consultar mis reservas por referencia"])
+      CU14(["CU-14<br/>Cancelar una reserva mediante referencia"])
+    end
+    subgraph VI["Rutas, galería y acceso"]
+      CU15(["CU-15<br/>Explorar un recorrido cultural"])
+      CU16(["CU-16<br/>Explorar la galería por categorías"])
+      CU17(["CU-17<br/>Ampliar y recorrer imágenes de la galería"])
+      CU18(["CU-18<br/>Consultar condiciones demo de acceso a sedes"])
+      CU19(["CU-19<br/>Personalizar la lectura de la guía"])
+    end
+    subgraph OP["Opiniones"]
+      CU21(["CU-21<br/>Enviar una valoración sobre la experiencia"])
+      CU22(["CU-22<br/>Consultar el resumen de valoraciones"])
+    end
+  end
+  V --- CU01
+  T --- CU02
+  V --- CU03
+  V --- CU04
+  V --- CU05
+  V --- CU06
+  V --- CU07
+  V --- CU08
+  V ----- CU09
+  V ----- CU10
+  V ----- CU11
+  V ----- CU12
+  V ----- CU13
+  V ----- CU14
+  V ------- CU15
+  V ------- CU16
+  V ------- CU17
+  V ------- CU18
+  V ------- CU19
+  V --- CU20
+  V ------- CU21
+  V ------- CU22

@@ -1,0 +1,53 @@
+---
+config:
+  theme: neutral
+---
+flowchart TB
+  ROOT["package.json y lock raíz<br/>workspaces apps/* y packages/*"]
+  subgraph W["apps/web · @fiavl/web"]
+    direction TB
+    ENTRY["index.html · src/main.tsx · src/Home.tsx"]
+    FE["src/features/<br/>index.ts, types.ts y nueve carpetas"]
+    CO["src/components/<br/>Stage, Status, StageCarousel, FestivalGuide"]
+    LIB["src/lib/<br/>http, storage, festival2026"]
+    PUB["public/<br/>art e images"]
+    WC["vite.config.ts"]
+    ENTRY --> FE
+    ENTRY --> CO
+    FE --> CO
+    FE --> LIB
+    CO --> LIB
+    WC -.-> ENTRY
+    ENTRY -.-> PUB
+    FE -.-> PUB
+  end
+  subgraph A["apps/api · @fiavl/api"]
+    direction TB
+    SERVER["src/server.ts"]
+    CMAIN["src/composition.ts y src/composition/"]
+    HT["src/app.ts y src/features/"]
+    SVC["src/catalog.ts y src/services/"]
+    REP["src/repositories/"]
+    DBC["src/db.ts · seed.ts · seed-cli.ts"]
+    MIG["migrations/<br/>001, 006, 010"]
+    SERVER --> CMAIN
+    SERVER --> DBC
+    CMAIN --> HT
+    CMAIN --> SVC
+    CMAIN --> REP
+    HT -.->|tipos de operaciones| SVC
+    REP -.->|interfaces de repositorio| SVC
+    DBC -.->|lee SQL numerado| MIG
+  end
+  P["@fiavl/contracts<br/>packages/contracts/src/index.ts"]
+  T["tests/<br/>Node, integraciones HTTP, bootstrap y e2e"]
+  CI["fiavl.cmd · scripts/<br/>.github/workflows/ci.yml"]
+  ROOT -.-> W
+  ROOT -.-> A
+  ROOT -.-> P
+  A -.->|importa workspace| P
+  W -.->|importa workspace| P
+  T -.-> W
+  T -.-> A
+  T -.-> P
+  CI -.-> T

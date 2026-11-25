@@ -5,6 +5,10 @@
 <!-- diagram: CU-20 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 sequenceDiagram
 actor V as Visitante
 participant F as FestivalProgram y FestivalVenues

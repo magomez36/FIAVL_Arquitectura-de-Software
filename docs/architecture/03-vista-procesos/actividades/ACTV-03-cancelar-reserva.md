@@ -5,6 +5,10 @@
 <!-- diagram: ACTV-03 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> R["Tomar referencia guardada o manual"]
   R --> X{"¿Entrada manual vacía?"}
@@ -25,8 +29,6 @@ flowchart TD
   L -.->|Excepción antes de confirmar| Y
   B -.->|Fallo al abrir| O["500"] --> F
   Y --> F
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,X,V,Q accent
 ```
 
 Las salidas de los rombos llevan condiciones y los nodos redondeados delimitan el inicio y el fin de la actividad. [apps/api/src/services/reservations.ts](../../../../apps/api/src/services/reservations.ts), [apps/api/src/repositories/reservations.ts](../../../../apps/api/src/repositories/reservations.ts), [tests/reservations.test.ts](../../../../tests/reservations.test.ts).

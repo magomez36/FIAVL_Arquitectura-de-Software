@@ -3,7 +3,6 @@
 ## Arquitectura de software con el modelo 4+1
 
 **Asignatura** Arquitectura de Software<br/>
-**Proyecto** FIAVL Explora · Prototipo académico<br/>
 **Institución** [Completar institución]<br/>
 **Docente** [Completar nombre del docente]<br/>
 **Integrantes** [Completar nombres y datos académicos]<br/>
@@ -14,360 +13,292 @@
 ## Índice
 
 1. [Introducción](#1-introducción)
-2. [Estilo arquitectónico adoptado](#2-estilo-arquitectónico-adoptado)
+2. [Estilo arquitectónico](#2-estilo-arquitectónico)
 3. [Modelo arquitectónico 4+1](#3-modelo-arquitectónico-41)
 4. [Vista lógica](#4-vista-lógica)
 5. [Vista de desarrollo](#5-vista-de-desarrollo)
 6. [Vista de procesos](#6-vista-de-procesos)
 7. [Vista física](#7-vista-física)
-8. [Vista de escenarios](#8-vista-de-escenarios)
+8. [Vista de escenarios (+1)](#8-vista-de-escenarios-1)
 9. [Matriz de trazabilidad](#9-matriz-de-trazabilidad)
 10. [Conclusiones](#10-conclusiones)
-11. [Referencias](#11-referencias)
+11. [Referencias bibliográficas](#11-referencias-bibliográficas)
 
 ## 1. Introducción
 
-FIAVL Explora presenta una edición demostrativa del Festival Internacional de Artes Vivas de Loja. El público puede explorar programación, artistas, sedes, recorridos y recursos gráficos, organizar su agenda local, reservar plazas demo, ajustar la lectura y enviar una opinión. La guía editorial publica fichas estáticas diferenciadas del catálogo demo.
+FIAVL Explora es un prototipo académico para consultar una edición demostrativa del Festival Internacional de Artes Vivas de Loja. Permite explorar su programación, organizar una agenda, solicitar plazas demo y compartir opiniones. Este documento presenta la arquitectura de las diez especificaciones integradas.
 
-El documento describe las diez especificaciones integradas en `main` a partir del SHA indicado en la portada. Las superficies verificadas y las pruebas versionadas se detallan en el [inventario técnico](../analysis/01-inventario-arquitectonico.md) y la [validación documental](../validation.md).
+## 2. Estilo arquitectónico
 
-## 2. Estilo arquitectónico adoptado
-
-El prototipo usa un modelo cliente-servidor con tres capas lógicas. La capa de **presentación** incluye React/TypeScript, el cliente HTTP y la adaptación Express. La capa de **negocio** valida los datos de entrada y aplica las reglas de consulta, disponibilidad, reserva y encuesta. La capa de **acceso a datos** encapsula SQL y convierte filas mediante repositorios. El navegador se comunica por REST/JSON y el proceso Node.js ejecuta SQLite embebido. Web y API comparten los esquemas TypeScript/Zod mediante npm workspaces. [ADR 005](../../adr.md).
+La aplicación emplea un modelo cliente-servidor y tres capas lógicas. La **presentación** incluye React y los adaptadores HTTP. La **lógica de negocio** aplica las reglas de validación, catálogo, reservas y opiniones. El **acceso a datos** encapsula las consultas a SQLite mediante repositorios. React y Express intercambian JSON mediante una API REST y comparten contratos Zod. SQLite se ejecuta dentro del proceso Node.js. [Decisión arquitectónica](../../adr.md).
 
 ## 3. Modelo arquitectónico 4+1
 
-Las vistas relacionan el dominio, las dependencias del código, la ejecución y la topología mediante escenarios observables. Las vistas de clases y secuencia emplean sintaxis específica de Mermaid. Las restantes usan `flowchart`, con convenciones que preservan la intención conceptual de cada dibujo.
-
-| Vista | Diagramas | Cantidad |
-|---|---|---:|
-| Lógica | Clases del dominio | 1 |
-| Desarrollo | Componentes y paquetes | 2 |
-| Procesos | 22 secuencias funcionales, 1 técnica y 5 actividades | 28 |
-| Física | Despliegue local | 1 |
-| Escenarios (+1) | Casos de uso | 1 |
-| | **Total** | **33** |
+La vista lógica explica los datos y sus relaciones. Desarrollo describe las dependencias y la organización del código. Procesos muestra las interacciones y decisiones en ejecución. Física sitúa los procesos y la persistencia en el entorno local. Los escenarios vinculan estas vistas con los objetivos de los actores.
 
 ## 4. Vista lógica
 
-Evento, Artista y Sede son DTO inferidos de Zod y conceptos del catálogo. Cada evento tiene una sede. Los créditos asocian eventos y artistas y guardan el orden editorial. La reserva pertenece a un evento, persiste el hash de la referencia y cambia de activa a cancelada. La valoración es independiente. El agregado y la disponibilidad se calculan a partir de filas existentes. Agenda y preferencias conservan datos en el navegador. Las fichas editoriales se empaquetan con el frontend. [Decisiones de modelado](../01-vista-logica.md).
+### 4.1. LOG-01 · Dominio y estructuras relevantes
 
-### LOG-01 · Dominio y estructuras relevantes
+Cada evento se presenta en una sede y relaciona artistas mediante créditos. Una reserva pertenece a un evento. Las valoraciones son independientes. La figura también distingue los datos del navegador de los persistidos en SQLite.
 
-Tipos y tablas de catálogo, créditos, reservas y valoraciones. Distingue DTO y modelos del navegador.
-
-![LOG-01 · Dominio y estructuras relevantes](../rendered/svg/LOG-01.svg)
-
-[Mermaid original](../diagrams/LOG-01.mmd) · [Fuente canónica](../01-vista-logica.md).
+![LOG-01 · Dominio y estructuras relevantes](../rendered/png/LOG-01.png)
 
 ## 5. Vista de desarrollo
 
-La primera figura describe responsabilidades y llamadas entre componentes. La segunda representa la organización por rutas, workspaces y dependencias estáticas. La composición raíz conecta routers, servicios y repositorios mediante interfaces y objetos de operaciones. Los esquemas Zod se incluyen como biblioteca. [Vista de desarrollo](../02-vista-desarrollo.md).
+### 5.1. DES-01 · Componentes y responsabilidades
 
-### DES-01 · Componentes y responsabilidades
+Muestra las llamadas entre la web, la API, los servicios y los repositorios. La aplicación importa los esquemas Zod como biblioteca.
 
-Traza llamadas de componentes y adaptadores, servicios, repositorios y datos.
+![DES-01 · Componentes y responsabilidades](../rendered/png/DES-01.png)
 
-![DES-01 · Componentes y responsabilidades](../rendered/svg/DES-01.svg)
+### 5.2. DES-02 · Paquetes y dependencias estáticas
 
-[Mermaid original](../diagrams/DES-01.mmd) · [Fuente canónica](../02-vista-desarrollo.md).
+Ubica los workspaces, sus módulos y las dependencias estáticas del código.
 
-### DES-02 · Paquetes y dependencias estáticas
-
-Explica los módulos y dependencias de código, workspaces y herramientas.
-
-![DES-02 · Paquetes y dependencias estáticas](../rendered/svg/DES-02.svg)
-
-[Mermaid original](../diagrams/DES-02.mmd) · [Fuente canónica](../02-vista-desarrollo.md).
+![DES-02 · Paquetes y dependencias estáticas](../rendered/png/DES-02.png)
 
 ## 6. Vista de procesos
 
-La web inicia lecturas HTTP asíncronas y controla estados de carga, error y reintento. Sus fichas precargadas, el diálogo y los ajustes responden con mecanismos locales. El backend ejecuta operaciones síncronas de SQLite. En una creación de reserva, el bloqueo de escritura precede la lectura del aforo y se mantiene hasta confirmar o revertir. Cada intento recalcula las plazas activas que quedan. Una cancelación repetida conserva el resultado anterior. [Vista de procesos](../03-vista-procesos/README.md).
+Las secuencias distinguen la comunicación HTTP de las operaciones locales. La secuencia de concurrencia y las actividades detallan las decisiones que afectan a la persistencia o a la recuperación de errores.
 
-### CU-01 · Descubrir la edición demo
+### 6.1. CU-01 · Descubrir la edición demo
 
-Reconocer la edición y llegar a una sección o a la selección demo. Participan App, Header, Home, StageCarousel, Selection, cliente HTTP, catálogo.
+La portada presenta la edición, consulta una selección del catálogo y permite acceder a las secciones.
 
-![CU-01 · Descubrir la edición demo](../rendered/svg/CU-01.svg)
+![CU-01 · Descubrir la edición demo](../rendered/png/CU-01.png)
 
-[Mermaid original](../diagrams/CU-01.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-01-descubrir-edicion.md).
+### 6.2. CU-02 · Consultar el catálogo mediante la API pública
 
-### CU-02 · Consultar el catálogo mediante la API pública
+El integrante consulta listas o fichas por ID mediante la API. El catálogo devuelve datos o errores de validación y búsqueda.
 
-Obtener una colección demo o recuperar una ficha por identidad. Participan Cliente HTTP externo, Express, servicio y repositorio de catálogo, Zod, SQLite.
+![CU-02 · Consultar el catálogo mediante la API pública](../rendered/png/CU-02.png)
 
-![CU-02 · Consultar el catálogo mediante la API pública](../rendered/svg/CU-02.svg)
+### 6.3. CU-03 · Explorar la programación cultural
 
-[Mermaid original](../diagrams/CU-02.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-02-consultar-catalogo-api.md).
+Agenda carga el catálogo desde la API y aplica los filtros en el navegador.
 
-### CU-03 · Explorar la programación cultural
+![CU-03 · Explorar la programación cultural](../rendered/png/CU-03.png)
 
-Localizar eventos demo por interés, fecha, categoría o precio. Participan Agenda, getResource, filterEvents, catálogo.
+### 6.4. CU-04 · Consultar el detalle de un evento
 
-![CU-03 · Explorar la programación cultural](../rendered/svg/CU-03.svg)
+El visitante abre la ficha a partir de los datos precargados de eventos, sedes y artistas.
 
-[Mermaid original](../diagrams/CU-03.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-03-explorar-programacion.md).
+![CU-04 · Consultar el detalle de un evento](../rendered/png/CU-04.png)
 
-### CU-04 · Consultar el detalle de un evento
+### 6.5. CU-05 · Explorar el catálogo de artistas
 
-Conocer descripción, horario completo, sede, artistas y precio de un evento. Participan Agenda, StageButton, mapas del catálogo.
+La página consulta el catálogo de artistas y filtra por nombre, país y disciplina.
 
-![CU-04 · Consultar el detalle de un evento](../rendered/svg/CU-04.svg)
+![CU-05 · Explorar el catálogo de artistas](../rendered/png/CU-05.png)
 
-[Mermaid original](../diagrams/CU-04.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-04-detalle-evento.md).
+### 6.6. CU-06 · Consultar la trayectoria y actuaciones de un artista
 
-### CU-05 · Explorar el catálogo de artistas
+La ficha usa los datos cargados para mostrar la biografía y relacionar al artista con sus actuaciones.
 
-Encontrar artistas por nombre, país o disciplina. Participan Artistas, getResource, filterArtists, catálogo.
+![CU-06 · Consultar la trayectoria y actuaciones de un artista](../rendered/png/CU-06.png)
 
-![CU-05 · Explorar el catálogo de artistas](../rendered/svg/CU-05.svg)
+### 6.7. CU-07 · Encontrar una sede en el directorio demo
 
-[Mermaid original](../diagrams/CU-05.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-05-explorar-artistas.md).
+El directorio lee las sedes y aplica la búsqueda por nombre o dirección en el navegador.
 
-### CU-06 · Consultar la trayectoria y actuaciones de un artista
+![CU-07 · Encontrar una sede en el directorio demo](../rendered/png/CU-07.png)
 
-Leer la biografía y saber en qué eventos participa un artista. Participan ArtistCard, performancesOf, datos en React.
+### 6.8. CU-08 · Consultar una sede demo y sus actividades
 
-![CU-06 · Consultar la trayectoria y actuaciones de un artista](../rendered/svg/CU-06.svg)
+La ficha muestra los datos de la sede y vincula los eventos a partir del catálogo cargado.
 
-[Mermaid original](../diagrams/CU-06.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-06-detalle-artista.md).
+![CU-08 · Consultar una sede demo y sus actividades](../rendered/png/CU-08.png)
 
-### CU-07 · Encontrar una sede en el directorio demo
+### 6.9. CU-09 · Armar mi agenda personal
 
-Localizar una sede por nombre o dirección. Participan Espacios, getResource, searchable, catálogo.
+El visitante agrega o quita eventos. La página mantiene la selección en memoria y, si es posible, la guarda localmente.
 
-![CU-07 · Encontrar una sede en el directorio demo](../rendered/svg/CU-07.svg)
+![CU-09 · Armar mi agenda personal](../rendered/png/CU-09.png)
 
-[Mermaid original](../diagrams/CU-07.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-07-buscar-sede.md).
+### 6.10. CU-10 · Revisar mi programa y sus solapamientos
 
-### CU-08 · Consultar una sede demo y sus actividades
+La página recupera los IDs guardados, resuelve el catálogo y avisa de los horarios que se solapan.
 
-Conocer dónde está una sede, sus notas demo de acceso y sus actividades. Participan Espacios, VenueDetails, details/summary.
+![CU-10 · Revisar mi programa y sus solapamientos](../rendered/png/CU-10.png)
 
-![CU-08 · Consultar una sede demo y sus actividades](../rendered/svg/CU-08.svg)
+### 6.11. CU-11 · Consultar plazas disponibles
 
-[Mermaid original](../diagrams/CU-08.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-08-detalle-sede.md).
+Reservas combina los eventos con su disponibilidad. El servidor calcula las plazas restantes a partir de las reservas activas.
 
-### CU-09 · Armar mi agenda personal
+![CU-11 · Consultar plazas disponibles](../rendered/png/CU-11.png)
 
-Guardar o quitar eventos de mi selección personal. Participan Mi agenda, lógica local, writeLocal, almacenamiento del navegador.
+### 6.12. CU-12 · Reservar plazas demostrativas
 
-![CU-09 · Armar mi agenda personal](../rendered/svg/CU-09.svg)
+El servicio valida el aforo y confirma la reserva en una transacción SQLite. El navegador muestra y guarda la referencia.
 
-[Mermaid original](../diagrams/CU-09.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-09-armar-agenda.md).
+![CU-12 · Reservar plazas demostrativas](../rendered/png/CU-12.png)
 
-### CU-10 · Revisar mi programa y sus solapamientos
+### 6.13. CU-13 · Consultar mis reservas por referencia
 
-Recuperar el programa y detectar conflictos de horarios. Participan Mi agenda, readLocal, lógica local, getResource, catálogo.
+La página consulta por HTTP el estado de las referencias guardadas. Puede quitar referencias obsoletas de la lista local.
 
-![CU-10 · Revisar mi programa y sus solapamientos](../rendered/svg/CU-10.svg)
+![CU-13 · Consultar mis reservas por referencia](../rendered/png/CU-13.png)
 
-[Mermaid original](../diagrams/CU-10.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-10-revisar-agenda.md).
+### 6.14. CU-14 · Cancelar una reserva mediante referencia
 
-### CU-11 · Consultar plazas disponibles
+El servicio localiza la reserva por su referencia y cancela de forma idempotente. La página consulta el saldo actualizado.
 
-Saber qué eventos admiten reserva y cuántas plazas les quedan. Participan Reservas, getResource, routers, servicios y repositorios de catálogo y reservas.
+![CU-14 · Cancelar una reserva mediante referencia](../rendered/png/CU-14.png)
 
-![CU-11 · Consultar plazas disponibles](../rendered/svg/CU-11.svg)
+### 6.15. CU-15 · Explorar un recorrido cultural
 
-[Mermaid original](../diagrams/CU-11.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-11-consultar-plazas.md).
+La página combina el catálogo de sedes con itinerarios editoriales. El visitante cambia de recorrido o avanza entre paradas.
 
-### CU-12 · Reservar plazas demostrativas
+![CU-15 · Explorar un recorrido cultural](../rendered/png/CU-15.png)
 
-Obtener una reserva activa y una referencia para recuperarla o cancelarla. Participan Reservas, checkQuantity, postJson, router, servicio, repositorio, SQLite, writeLocal.
+### 6.16. CU-16 · Explorar la galería por categorías
 
-![CU-12 · Reservar plazas demostrativas](../rendered/svg/CU-12.svg)
+La galería reúne sedes y recursos locales. El visitante filtra la colección y consulta sus créditos.
 
-[Mermaid original](../diagrams/CU-12.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-12-reservar-plazas.md).
+![CU-16 · Explorar la galería por categorías](../rendered/png/CU-16.png)
 
-### CU-13 · Consultar mis reservas por referencia
+### 6.17. CU-17 · Ampliar y recorrer imágenes de la galería
 
-Recuperar el estado de las referencias recordadas y gestionar esa lista local. Participan Reservas, readLocal/writeLocal, getResource, router, servicio y repositorio.
+El diálogo muestra la imagen ampliada, permite recorrer sus vecinos y devuelve el foco al cerrarse.
 
-![CU-13 · Consultar mis reservas por referencia](../rendered/svg/CU-13.svg)
+![CU-17 · Ampliar y recorrer imágenes de la galería](../rendered/png/CU-17.png)
 
-[Mermaid original](../diagrams/CU-13.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-13-consultar-reservas.md).
+### 6.18. CU-18 · Consultar condiciones demo de acceso a sedes
 
-### CU-14 · Cancelar una reserva mediante referencia
+La guía consulta las sedes y filtra las condiciones de acceso y direcciones del catálogo demo.
 
-Liberar las plazas de una reserva cuya referencia posee. Participan Reservas, postJson, router, servicio, repositorio, SQLite.
+![CU-18 · Consultar condiciones demo de acceso a sedes](../rendered/png/CU-18.png)
 
-![CU-14 · Cancelar una reserva mediante referencia](../rendered/svg/CU-14.svg)
+### 6.19. CU-19 · Personalizar la lectura de la guía
 
-[Mermaid original](../diagrams/CU-14.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-14-cancelar-reserva.md).
+Los ajustes de tamaño y contraste se aplican en la guía. El navegador intenta conservarlos entre visitas.
 
-### CU-15 · Explorar un recorrido cultural
+![CU-19 · Personalizar la lectura de la guía](../rendered/png/CU-19.png)
 
-Recorrer una secuencia temática de sedes y conocer cada parada. Participan Rutas, Recorrido, itinerarios, getResource, catálogo.
+### 6.20. CU-20 · Consultar la guía editorial del FIAVL 2026
 
-![CU-15 · Explorar un recorrido cultural](../rendered/svg/CU-15.svg)
+La guía presenta obras, horarios y sedes a partir de fichas editoriales incluidas en la web.
 
-[Mermaid original](../diagrams/CU-15.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-15-explorar-recorrido.md).
+![CU-20 · Consultar la guía editorial del FIAVL 2026](../rendered/png/CU-20.png)
 
-### CU-16 · Explorar la galería por categorías
+### 6.21. CU-21 · Enviar una valoración sobre la experiencia
 
-Encontrar imágenes y reconocer su procedencia. Participan Galería, Picture, buildItems, categoryCounts, getResource, catálogo.
+El formulario y el servicio validan la valoración. La API devuelve el recibo después de registrar la respuesta.
 
-![CU-16 · Explorar la galería por categorías](../rendered/svg/CU-16.svg)
+![CU-21 · Enviar una valoración sobre la experiencia](../rendered/png/CU-21.png)
 
-[Mermaid original](../diagrams/CU-16.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-16-explorar-galeria.md).
+### 6.22. CU-22 · Consultar el resumen de valoraciones
 
-### CU-17 · Ampliar y recorrer imágenes de la galería
+El servicio agrega las respuestas de SQLite. La página presenta el total, la distribución y el promedio.
 
-Examinar una imagen ampliada y sus créditos, y recorrer resultados vecinos. Participan Galería, Lightbox, Picture, neighbour, API DOM del navegador.
+![CU-22 · Consultar el resumen de valoraciones](../rendered/png/CU-22.png)
 
-![CU-17 · Ampliar y recorrer imágenes de la galería](../rendered/svg/CU-17.svg)
+### 6.23. TEC-01 · Contención por el mismo aforo
 
-[Mermaid original](../diagrams/CU-17.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-17-ampliar-galeria.md).
+Dos solicitudes compiten por el mismo aforo. Cada transacción adquiere el bloqueo de escritura antes de volver a comprobar las plazas.
 
-### CU-18 · Consultar condiciones demo de acceso a sedes
+![TEC-01 · Contención por el mismo aforo](../rendered/png/TEC-01.png)
 
-Encontrar notas de acceso y dirección de una sede demo. Participan Guía de accesibilidad, VenueCard, filterVenues, getResource, catálogo.
+### 6.24. ACTV-01 · Planificar la agenda y detectar conflictos
 
-![CU-18 · Consultar condiciones demo de acceso a sedes](../rendered/svg/CU-18.svg)
+La agenda resuelve eventos guardados, detecta conflictos y avisa si falla la persistencia local.
 
-[Mermaid original](../diagrams/CU-18.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-18-consultar-acceso.md).
+![ACTV-01 · Planificar la agenda y detectar conflictos](../rendered/png/ACTV-01.png)
 
-### CU-19 · Personalizar la lectura de la guía
+### 6.25. ACTV-02 · Validar y confirmar una reserva
 
-Ajustar y conservar tamaño y contraste o recuperar los valores predeterminados. Participan Guía, restore, preferencesSchema, readLocal/writeLocal, CSS.
+La creación valida los datos, comprueba el saldo dentro de la transacción y confirma o revierte la escritura.
 
-![CU-19 · Personalizar la lectura de la guía](../rendered/svg/CU-19.svg)
+![ACTV-02 · Validar y confirmar una reserva](../rendered/png/ACTV-02.png)
 
-[Mermaid original](../diagrams/CU-19.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-19-personalizar-lectura.md).
+### 6.26. ACTV-03 · Cancelar una reserva de forma idempotente
 
-### CU-20 · Consultar la guía editorial del FIAVL 2026
+La cancelación cambia el estado de una reserva activa. Las solicitudes repetidas conservan el resultado anterior.
 
-Identificar obras, artistas, horarios y sedes documentadas y acceder a la fuente. Participan FestivalProgram, FestivalVenues, MuseumPhoto, datos `festival2026.ts`.
+![ACTV-03 · Cancelar una reserva de forma idempotente](../rendered/png/ACTV-03.png)
 
-![CU-20 · Consultar la guía editorial del FIAVL 2026](../rendered/svg/CU-20.svg)
+### 6.27. ACTV-04 · Restaurar y ajustar preferencias de lectura
 
-[Mermaid original](../diagrams/CU-20.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-20-consultar-guia-editorial.md).
+Los ajustes pueden restaurarse o cambiarse. Si falla el guardado, el ajuste se aplica durante la visita actual.
 
-### CU-21 · Enviar una valoración sobre la experiencia
+![ACTV-04 · Restaurar y ajustar preferencias de lectura](../rendered/png/ACTV-04.png)
 
-Compartir una puntuación y un comentario opcional y recibir confirmación. Participan Opiniones, esquema compartido, fetch, router, servicio, repositorio, SQLite.
+### 6.28. ACTV-05 · Validar y confirmar una valoración
 
-![CU-21 · Enviar una valoración sobre la experiencia](../rendered/svg/CU-21.svg)
+El envío distingue validación, escritura y confirmación de la respuesta.
 
-[Mermaid original](../diagrams/CU-21.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-21-enviar-valoracion.md).
-
-### CU-22 · Consultar el resumen de valoraciones
-
-Conocer el total, la distribución y el promedio agregado de respuestas. Participan Summary, getResource, router, servicio, repositorio, SQLite.
-
-![CU-22 · Consultar el resumen de valoraciones](../rendered/svg/CU-22.svg)
-
-[Mermaid original](../diagrams/CU-22.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/CU-22-consultar-resumen.md).
-
-### TEC-01 · Contención por el mismo aforo
-
-Dos clientes, una disponibilidad inicial, exclusión de escrituras y resultados según orden de confirmación.
-
-![TEC-01 · Contención por el mismo aforo](../rendered/svg/TEC-01.svg)
-
-[Mermaid original](../diagrams/TEC-01.mmd) · [Fuente canónica](../03-vista-procesos/secuencias/TEC-01-reservas-concurrentes.md).
-
-### ACTV-01 · Planificar la agenda y detectar conflictos
-
-Expone el ciclo de edición, guardado tolerante a fallos y revisión de conflictos. La lectura fallida se puede reintentar con la selección local intacta.
-
-![ACTV-01 · Planificar la agenda y detectar conflictos](../rendered/svg/ACTV-01.svg)
-
-[Mermaid original](../diagrams/ACTV-01.mmd) · [Fuente canónica](../03-vista-procesos/actividades/ACTV-01-planificar-agenda.md).
-
-### ACTV-02 · Validar y confirmar una reserva
-
-Hace visibles las ramas de validación, evento, aforo y excepción. La decisión de aforo ocurre dentro de la transacción.
-
-![ACTV-02 · Validar y confirmar una reserva](../rendered/svg/ACTV-02.svg)
-
-[Mermaid original](../diagrams/ACTV-02.mmd) · [Fuente canónica](../03-vista-procesos/actividades/ACTV-02-crear-reserva.md).
-
-### ACTV-03 · Cancelar una reserva de forma idempotente
-
-Distingue el cambio de activa a cancelada de una solicitud repetida. El saldo vuelve a calcularse a partir de las activas.
-
-![ACTV-03 · Cancelar una reserva de forma idempotente](../rendered/svg/ACTV-03.svg)
-
-[Mermaid original](../diagrams/ACTV-03.mmd) · [Fuente canónica](../03-vista-procesos/actividades/ACTV-03-cancelar-reserva.md).
-
-### ACTV-04 · Restaurar y ajustar preferencias de lectura
-
-Expone la recuperación de datos fuera de esquema, el restablecimiento y la posibilidad de aplicar un ajuste que no se pudo guardar.
-
-![ACTV-04 · Restaurar y ajustar preferencias de lectura](../rendered/svg/ACTV-04.svg)
-
-[Mermaid original](../diagrams/ACTV-04.mmd) · [Fuente canónica](../03-vista-procesos/actividades/ACTV-04-ajustar-accesibilidad.md).
-
-### ACTV-05 · Validar y confirmar una valoración
-
-Distingue validación cliente/servidor, persistencia y confirmación del recibo. El reintento del formulario puede ocurrir tras una respuesta no confirmada.
-
-![ACTV-05 · Validar y confirmar una valoración](../rendered/svg/ACTV-05.svg)
-
-[Mermaid original](../diagrams/ACTV-05.mmd) · [Fuente canónica](../03-vista-procesos/actividades/ACTV-05-enviar-valoracion.md).
+![ACTV-05 · Validar y confirmar una valoración](../rendered/png/ACTV-05.png)
 
 ## 7. Vista física
 
-La ejecución local usa Vite en `127.0.0.1:5173` y Express en `127.0.0.1:3001`. Vite reenvía `/api`. SQLite se ejecuta en el backend y conserva el archivo en el anfitrión. El bootstrap Windows prepara el runtime, las dependencias y la semilla. El build emite el conjunto de archivos estáticos y el JavaScript del backend. [Despliegue y modos de ejecución](../04-vista-fisica.md).
+### 7.1. FIS-01 · Despliegue local documentado
 
-### FIS-01 · Despliegue local documentado
+En el equipo anfitrión, Vite escucha en el puerto 5173 y redirige /api a Express en el puerto 3001. El backend accede al archivo SQLite local.
 
-Computadora anfitriona, navegador y origen, bootstrap, procesos, puertos y archivo SQLite.
+![FIS-01 · Despliegue local documentado](../rendered/png/FIS-01.png)
 
-![FIS-01 · Despliegue local documentado](../rendered/svg/FIS-01.svg)
+## 8. Vista de escenarios (+1)
 
-[Mermaid original](../diagrams/FIS-01.mmd) · [Fuente canónica](../04-vista-fisica.md).
+- **ACT-01 · Visitante** usa la interfaz web para explorar la edición y realizar acciones personales.
+- **ACT-02 · Integrante técnico** consulta la API pública para verificar los datos del catálogo.
 
-## 8. Vista de escenarios
+### 8.1. ESC-01 · Casos de uso de FIAVL Explora
 
-El visitante cumple los objetivos de la interfaz web. El integrante técnico consulta el catálogo público por HTTP como parte del objetivo de verificar sus datos. El alcance de cada objetivo y sus variaciones se detallan en el [catálogo de actores y casos](../analysis/02-actores-y-casos-de-uso.md).
+El límite de FIAVL Explora agrupa los objetivos de los actores. Cada línea identifica quién participa en el caso de uso correspondiente.
 
-### ESC-01 · Casos de uso de FIAVL Explora
+![ESC-01 · Casos de uso de FIAVL Explora](../rendered/png/ESC-01.png)
 
-Dos actores externos, límite del sistema y objetivos agrupados. Las asociaciones se trazan a casos concretos.
+### 8.2. Tabla de casos de uso
 
-![ESC-01 · Casos de uso de FIAVL Explora](../rendered/svg/ESC-01.svg)
-
-[Mermaid original](../diagrams/ESC-01.mmd) · [Fuente canónica](../05-vista-escenarios.md).
+| Código | Caso de uso | Actor | Spec |
+|---|---|---|---|
+| CU-01 | Descubrir la edición demo | ACT-01 | 1 |
+| CU-02 | Consultar el catálogo mediante la API pública | ACT-02 | 1 |
+| CU-03 | Explorar la programación cultural | ACT-01 | 2 |
+| CU-04 | Consultar el detalle de un evento | ACT-01 | 2 |
+| CU-05 | Explorar el catálogo de artistas | ACT-01 | 3 |
+| CU-06 | Consultar la trayectoria y actuaciones de un artista | ACT-01 | 3 |
+| CU-07 | Encontrar una sede en el directorio demo | ACT-01 | 4 |
+| CU-08 | Consultar una sede demo y sus actividades | ACT-01 | 4 |
+| CU-09 | Armar mi agenda personal | ACT-01 | 5 |
+| CU-10 | Revisar mi programa y sus solapamientos | ACT-01 | 5 |
+| CU-11 | Consultar plazas disponibles | ACT-01 | 6 |
+| CU-12 | Reservar plazas demostrativas | ACT-01 | 6 |
+| CU-13 | Consultar mis reservas por referencia | ACT-01 | 6 |
+| CU-14 | Cancelar una reserva mediante referencia | ACT-01 | 6 |
+| CU-15 | Explorar un recorrido cultural | ACT-01 | 7 |
+| CU-16 | Explorar la galería por categorías | ACT-01 | 8 |
+| CU-17 | Ampliar y recorrer imágenes de la galería | ACT-01 | 8 |
+| CU-18 | Consultar condiciones demo de acceso a sedes | ACT-01 | 9 |
+| CU-19 | Personalizar la lectura de la guía | ACT-01 | 9 |
+| CU-20 | Consultar la guía editorial del FIAVL 2026 | ACT-01 | 10 |
+| CU-21 | Enviar una valoración sobre la experiencia | ACT-01 | 10 |
+| CU-22 | Consultar el resumen de valoraciones | ACT-01 | 10 |
 
 ## 9. Matriz de trazabilidad
 
-| Spec | Caso de uso | Requisito o historia | Secuencia |
-|---|---|---|---|
-| 1 | CU-01 · Descubrir la edición demo | FR-003–004, US2, SC-002. También Spec 10 US1–2, US6–7 y V1–V5, C4–C5. | [CU-01](../03-vista-procesos/secuencias/CU-01-descubrir-edicion.md) |
-| 1 | CU-02 · Consultar el catálogo mediante la API pública | FR-001 (lecturas), FR-002, US1, SC-001. | [CU-02](../03-vista-procesos/secuencias/CU-02-consultar-catalogo-api.md) |
-| 2 | CU-03 · Explorar la programación cultural | US1, US2, US4, FR-001–004, SC-001. | [CU-03](../03-vista-procesos/secuencias/CU-03-explorar-programacion.md) |
-| 2 | CU-04 · Consultar el detalle de un evento | US3 y requisitos transversales FR-002–004. | [CU-04](../03-vista-procesos/secuencias/CU-04-detalle-evento.md) |
-| 3 | CU-05 · Explorar el catálogo de artistas | US1–2, US4, FR-001–003, FR-005–009, SC-001, SC-003–005. | [CU-05](../03-vista-procesos/secuencias/CU-05-explorar-artistas.md) |
-| 3 | CU-06 · Consultar la trayectoria y actuaciones de un artista | US3, FR-004, SC-002 y SC-004. | [CU-06](../03-vista-procesos/secuencias/CU-06-detalle-artista.md) |
-| 4 | CU-07 · Encontrar una sede en el directorio demo | US1, US3, R1, R4–R5. | [CU-07](../03-vista-procesos/secuencias/CU-07-buscar-sede.md) |
-| 4 | CU-08 · Consultar una sede demo y sus actividades | US2, R2–R5. | [CU-08](../03-vista-procesos/secuencias/CU-08-detalle-sede.md) |
-| 5 | CU-09 · Armar mi agenda personal | Historias 1 y 3, edición, duplicado, limpieza y guardado. | [CU-09](../03-vista-procesos/secuencias/CU-09-armar-agenda.md) |
-| 5 | CU-10 · Revisar mi programa y sus solapamientos | Historias 1–3 y estados de carga, error y vacío. | [CU-10](../03-vista-procesos/secuencias/CU-10-revisar-agenda.md) |
-| 6 | CU-11 · Consultar plazas disponibles | US2, US4, R1, R6. | [CU-11](../03-vista-procesos/secuencias/CU-11-consultar-plazas.md) |
-| 6 | CU-12 · Reservar plazas demostrativas | US1, US4–5, R1–R7, E1–E2 y E4–E5. | [CU-12](../03-vista-procesos/secuencias/CU-12-reservar-plazas.md) |
-| 6 | CU-13 · Consultar mis reservas por referencia | US3–5, R5–R7; contrato GET por referencia. | [CU-13](../03-vista-procesos/secuencias/CU-13-consultar-reservas.md) |
-| 6 | CU-14 · Cancelar una reserva mediante referencia | US3–5, R2–R6, E3. | [CU-14](../03-vista-procesos/secuencias/CU-14-cancelar-reserva.md) |
-| 7 | CU-15 · Explorar un recorrido cultural | US1–3, R1–R5, éxito medible. | [CU-15](../03-vista-procesos/secuencias/CU-15-explorar-recorrido.md) |
-| 8 | CU-16 · Explorar la galería por categorías | US1–2, US4–5, R1–3, R5–R7. | [CU-16](../03-vista-procesos/secuencias/CU-16-explorar-galeria.md) |
-| 8 | CU-17 · Ampliar y recorrer imágenes de la galería | US2–4, R4–R6. | [CU-17](../03-vista-procesos/secuencias/CU-17-ampliar-galeria.md) |
-| 9 | CU-18 · Consultar condiciones demo de acceso a sedes | US1–2, US5, R1–2, R5–6. | [CU-18](../03-vista-procesos/secuencias/CU-18-consultar-acceso.md) |
-| 9 | CU-19 · Personalizar la lectura de la guía | US3–5, R3–6. | [CU-19](../03-vista-procesos/secuencias/CU-19-personalizar-lectura.md) |
-| 10 | CU-20 · Consultar la guía editorial del FIAVL 2026 | US5, C1–C3 y C5. | [CU-20](../03-vista-procesos/secuencias/CU-20-consultar-guia-editorial.md) |
-| 10 | CU-21 · Enviar una valoración sobre la experiencia | US3, E1, E3 y C5. | [CU-21](../03-vista-procesos/secuencias/CU-21-enviar-valoracion.md) |
-| 10 | CU-22 · Consultar el resumen de valoraciones | US4, E2–E3. | [CU-22](../03-vista-procesos/secuencias/CU-22-consultar-resumen.md) |
+| Spec | Casos de uso | Diagramas de proceso |
+|---|---|---|
+| 1 · Base | CU-01, CU-02 | CU-01, CU-02 |
+| 2 · Agenda | CU-03, CU-04 | CU-03, CU-04 |
+| 3 · Artistas | CU-05, CU-06 | CU-05, CU-06 |
+| 4 · Espacios | CU-07, CU-08 | CU-07, CU-08 |
+| 5 · Mi agenda | CU-09, CU-10 | CU-09, CU-10, ACTV-01 |
+| 6 · Reservas | CU-11 a CU-14 | CU-11 a CU-14, TEC-01, ACTV-02, ACTV-03 |
+| 7 · Recorridos | CU-15 | CU-15 |
+| 8 · Galería | CU-16, CU-17 | CU-16, CU-17 |
+| 9 · Accesibilidad | CU-18, CU-19 | CU-18, CU-19, ACTV-04 |
+| 10 · Opiniones | CU-20 a CU-22, CU-01 para la portada transversal | CU-20 a CU-22, CU-01, ACTV-05 |
 
-La [matriz completa](../06-matriz-trazabilidad.md) enlaza componentes, archivos, pruebas, actividades y requisitos transversales. El [inventario de figuras](../analysis/04-inventario-diagramas.md) incluye la ruta de todos los originales y de los recursos exportados.
+LOG-01, DES-01, DES-02 y FIS-01 representan la estructura compartida. ESC-01 reúne los 22 casos de uso. La [matriz del repositorio](../06-matriz-trazabilidad.md) vincula los requisitos con los archivos y pruebas.
 
 ## 10. Conclusiones
 
-El diseño por capas mantiene las reglas de aforo y encuesta en el backend. El navegador usa datos del catálogo para sus filtros y conserva de manera local la selección personal y las preferencias de lectura. Los escenarios de reserva muestran la correspondencia entre una acción de usuario, el contrato REST y la transacción SQLite. Los diagramas estructurales y de ejecución reflejan la misma implementación en las diez specs.
+La separación en capas concentra las reglas de aforo y opiniones en el backend. El navegador gestiona la navegación y las preferencias locales. Los escenarios vinculan estas responsabilidades con los datos, las transacciones y el despliegue comprobables en el repositorio.
 
-## 11. Referencias
+## 11. Referencias bibliográficas
 
-- Philippe Kruchten. «The 4+1 View Model of Architecture». *IEEE Software*, 12(6), 42–50, 1995. [Texto del autor](https://arxiv.org/abs/2006.04975).
+- Kruchten, P. (1995). «The 4+1 View Model of Architecture». IEEE Software, 12(6), 42–50. [Texto del autor](https://arxiv.org/abs/2006.04975).
 - Mermaid. [Referencia de sintaxis](https://mermaid.js.org/intro/syntax-reference.html).
-- GitHub Docs. [Creación y visualización de diagramas](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams).
-- FIAVL Explora. [Repositorio en el SHA de referencia](https://github.com/magomez36/FIAVL_Arquitectura-de-Software/tree/ff11546da61896fc7f6d363f63ebb793aed2f3ea), [contratos](../../contracts.md), [decisiones arquitectónicas](../../adr.md) y [procedencia de recursos](../../assets.md).
+- FIAVL Explora. [Implementación de referencia](https://github.com/magomez36/FIAVL_Arquitectura-de-Software/tree/ff11546da61896fc7f6d363f63ebb793aed2f3ea), [decisiones arquitectónicas](../../adr.md) y [contratos](../../contracts.md).

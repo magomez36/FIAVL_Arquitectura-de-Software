@@ -1,3 +1,7 @@
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> R["Leer localStorage al abrir la guía"]
   R --> J{"¿Valor recuperado?"}
@@ -15,5 +19,3 @@ flowchart TD
   W --> S{"¿Escritura correcta?"}
   S -->|Sí| O["Anunciar cambio y retirar aviso de corrupción"] --> E
   S -->|No| G["Anunciar bloqueo y mantener aviso previo si existe"] --> E
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,J,E,S accent

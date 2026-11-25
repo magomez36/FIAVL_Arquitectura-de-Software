@@ -5,6 +5,10 @@
 <!-- diagram: ACTV-02 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> U["Validar selección y cantidad en UI"]
   U --> Q{"¿Entrada local utilizable?"}
@@ -30,8 +34,6 @@ flowchart TD
   Z -.->|Excepción| Y
   C -.->|Excepción| Y
   Y --> F
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,Q,G,J,D,K accent
 ```
 
 Las salidas de los rombos llevan condiciones y los nodos redondeados delimitan el inicio y el fin de la actividad. [apps/api/src/services/reservations.ts](../../../../apps/api/src/services/reservations.ts), [apps/api/src/repositories/reservations.ts](../../../../apps/api/src/repositories/reservations.ts), [tests/reservations.test.ts](../../../../tests/reservations.test.ts).

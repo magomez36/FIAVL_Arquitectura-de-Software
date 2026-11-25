@@ -15,7 +15,7 @@ FIAVL Explora emplea arquitectura en capas dentro de un modelo cliente-servidor.
 
 - [Matriz definitiva de trazabilidad](architecture/06-matriz-trazabilidad.md).
 - [Análisis de base](architecture/analysis/01-inventario-arquitectonico.md), [actores y casos detallados](architecture/analysis/02-actores-y-casos-de-uso.md), [base de trazabilidad](architecture/analysis/03-matriz-trazabilidad.md), [inventario de diagramas y rutas](architecture/analysis/04-inventario-diagramas.md) y [hallazgos](architecture/analysis/05-hallazgos-y-limitaciones.md).
-- [Documento académico consolidado](architecture/academico/FIAVL_Arquitectura_4plus1.md) y [borrador PDF](architecture/academico/FIAVL_Arquitectura_4plus1.pdf).
+- [Documento académico en Markdown](architecture/academico/FIAVL_Arquitectura_4plus1.md) y [PDF académico](architecture/academico/FIAVL_Arquitectura_4plus1.pdf).
 - [Originales Mermaid](architecture/diagrams), [diagramas SVG](architecture/rendered/svg) y [respaldo PNG](architecture/rendered/png).
 - [Validación documental y reproducción del render](architecture/validation.md).
 

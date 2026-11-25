@@ -68,8 +68,17 @@ for (const [id, name] of cases) {
 }
 
 const observedKinds = new Map();
+const academicImages = [...academic.matchAll(/^!\[([A-Z]+-\d{2}) · [^\]]+\]\(\.\.\/rendered\/png\/([A-Z]+-\d{2})\.png\)$/gm)];
+assert.equal(academicImages.length, canonical.size);
+assert.deepEqual(academicImages.map(([, id]) => id).sort(), [...canonical.keys()].sort());
+assert(academicImages.every(([, label, file]) => label === file), 'Etiqueta de figura incoherente');
 for (const [id, { code }] of canonical) {
-  const kind = code.split(/\s/, 1)[0];
+  const neutral = '---\nconfig:\n  theme: neutral\n';
+  assert(code.startsWith(neutral), `Tema Mermaid de ${id}`);
+  assert(!code.includes('classDef '), `Estilo personalizado de ${id}`);
+  const end = code.indexOf('\n---\n', neutral.length - 1);
+  assert(end > 0, `Configuración Mermaid sin cierre: ${id}`);
+  const kind = code.slice(end + '\n---\n'.length).split(/\s/, 1)[0];
   observedKinds.set(kind, (observedKinds.get(kind) ?? 0) + 1);
   const source = normalize(await readFile(resolve(docs, 'diagrams', id + '.mmd'), 'utf8'));
   assert.equal(source, code, `Fuente extraída distinta: ${id}`);
@@ -78,7 +87,6 @@ for (const [id, { code }] of canonical) {
   const png = await readFile(resolve(docs, 'rendered/png', id + '.png'));
   assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a', `PNG inválido: ${id}`);
   assert(png.readUInt32BE(16) > 100 && png.readUInt32BE(20) > 100, `PNG demasiado pequeño: ${id}`);
-  assert.equal(academic.split(`../rendered/svg/${id}.svg`).length, 2, `Figura académica: ${id}`);
 }
 assert.deepEqual(observedKinds, expectedKinds);
 for (const [folder, suffix] of [['diagrams', '.mmd'], ['rendered/svg', '.svg'], ['rendered/png', '.png']]) {

@@ -1,3 +1,7 @@
+---
+config:
+  theme: neutral
+---
 flowchart TB
   ROOT["package.json y lock raíz<br/>workspaces apps/* y packages/*"]
   subgraph W["apps/web · @fiavl/web"]
@@ -47,5 +51,3 @@ flowchart TB
   T -.-> A
   T -.-> P
   CI -.-> T
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237,stroke-width:2px
-  class ROOT,P accent

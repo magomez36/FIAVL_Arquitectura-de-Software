@@ -5,6 +5,10 @@
 <!-- diagram: ACTV-04 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> R["Leer localStorage al abrir la guía"]
   R --> J{"¿Valor recuperado?"}
@@ -22,8 +26,6 @@ flowchart TD
   W --> S{"¿Escritura correcta?"}
   S -->|Sí| O["Anunciar cambio y retirar aviso de corrupción"] --> E
   S -->|No| G["Anunciar bloqueo y mantener aviso previo si existe"] --> E
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,J,E,S accent
 ```
 
 Las salidas de los rombos llevan condiciones y los nodos redondeados delimitan el inicio y el fin de la actividad. [apps/web/src/features/accesibilidad/index.tsx](../../../../apps/web/src/features/accesibilidad/index.tsx), [apps/web/src/lib/storage.ts](../../../../apps/web/src/lib/storage.ts), [tests/e2e/spec-09.spec.ts](../../../../tests/e2e/spec-09.spec.ts).

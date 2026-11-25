@@ -5,6 +5,10 @@
 <!-- diagram: CU-19 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 sequenceDiagram
 actor V as Visitante
 participant U as Guía de accesibilidad

@@ -7,6 +7,10 @@ El visitante usa la aplicación web. El integrante técnico utiliza la API públ
 <!-- diagram: ESC-01 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart LR
   V["ACT-01 · Visitante"]
   T["ACT-02 · Integrante técnico"]
@@ -16,7 +20,7 @@ flowchart LR
       CU02(["CU-02<br/>Consultar el catálogo mediante la API pública"])
       CU20(["CU-20<br/>Consultar la guía editorial del FIAVL 2026"])
     end
-    subgraph EX["Programación, artistas y sedes"]
+    subgraph EX["Agenda, artistas y sedes"]
       CU03(["CU-03<br/>Explorar la programación cultural"])
       CU04(["CU-04<br/>Consultar el detalle de un evento"])
       CU05(["CU-05<br/>Explorar el catálogo de artistas"])
@@ -32,7 +36,7 @@ flowchart LR
       CU13(["CU-13<br/>Consultar mis reservas por referencia"])
       CU14(["CU-14<br/>Cancelar una reserva mediante referencia"])
     end
-    subgraph VI["Recorridos, galería y acceso"]
+    subgraph VI["Rutas, galería y acceso"]
       CU15(["CU-15<br/>Explorar un recorrido cultural"])
       CU16(["CU-16<br/>Explorar la galería por categorías"])
       CU17(["CU-17<br/>Ampliar y recorrer imágenes de la galería"])
@@ -66,8 +70,6 @@ flowchart LR
   V --- CU20
   V ------- CU21
   V ------- CU22
-  classDef actor fill:#F5EDE0,stroke:#591C37,color:#302237,stroke-width:2px
-  class V,T actor
 ```
 
 ## Catálogo

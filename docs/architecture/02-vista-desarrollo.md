@@ -7,6 +7,10 @@ La línea gruesa representa el intercambio HTTP en ejecución. Las líneas de tr
 <!-- diagram: DES-01 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart TB
   subgraph W["Presentación · navegador"]
     direction TB
@@ -38,8 +42,6 @@ flowchart TB
   CLIENT ==>|"HTTP /api · JSON"| HT
   W -.->|"importa esquemas y tipos"| Z
   B -.->|"importa esquemas y tipos"| Z
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237,stroke-width:2px
-  class Z,CLIENT,HT,DB,LS accent
 ```
 
 La composición raíz entrega operaciones a Express e inyecta las implementaciones de repositorio en los servicios de catálogo, reservas y feedback. La flecha de composición hacia reservas ilustra este patrón. React valida la información recibida mediante esquemas. Los servicios validan las entradas pertinentes y el repositorio de catálogo valida sus proyecciones. Los contratos se importan como biblioteca. [Composición](../../apps/api/src/composition.ts), [router raíz](../../apps/api/src/app.ts), [cliente HTTP](../../apps/web/src/lib/http.ts), [contratos](../../packages/contracts/src/index.ts).
@@ -51,6 +53,10 @@ Los recintos representan paquetes npm y las rutas muestran la organización del 
 <!-- diagram: DES-02 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart TB
   ROOT["package.json y lock raíz<br/>workspaces apps/* y packages/*"]
   subgraph W["apps/web · @fiavl/web"]
@@ -100,8 +106,6 @@ flowchart TB
   T -.-> A
   T -.-> P
   CI -.-> T
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237,stroke-width:2px
-  class ROOT,P accent
 ```
 
 `apps/web` y `apps/api` dependen del workspace `@fiavl/contracts`. Los repositorios importan desde negocio las interfaces que implementan. En ejecución los servicios llaman al repositorio inyectado. Los scripts y las pruebas se ubican en la raíz y ejercitan los paquetes. [Manifest raíz](../../package.json), [Web](../../apps/web/package.json), [API](../../apps/api/package.json), [contratos](../../packages/contracts/package.json), [configuración de Playwright](../../playwright.config.ts).

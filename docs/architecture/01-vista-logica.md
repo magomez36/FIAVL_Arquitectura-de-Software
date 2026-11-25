@@ -7,6 +7,10 @@ El estilo por capas distribuye responsabilidades de presentación, negocio y acc
 <!-- diagram: LOG-01 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 classDiagram
 direction LR
 class Evento {

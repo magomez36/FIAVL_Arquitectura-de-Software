@@ -1,3 +1,7 @@
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> S0["Leer IDs guardados del navegador"]
   S0 --> R["Solicitar eventos y sedes"]
@@ -18,5 +22,3 @@ flowchart TD
   H --> O
   T --> O
   O -->|Salir| F
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,C,O,W,S accent

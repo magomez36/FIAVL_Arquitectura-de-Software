@@ -30,7 +30,7 @@ for (const path of await listMarkdown(docs)) {
 if (figures.size === 0) throw new Error('Sin figuras canónicas');
 
 const { chromium } = await import(pathToFileURL(resolve(playwrightModule)).href);
-const browser = await chromium.launch();
+const browser = await chromium.launch({ args: ['--disable-lcd-text'] });
 try {
   const page = await browser.newPage({ deviceScaleFactor: 2 });
   const sourceDir = resolve(docs, 'diagrams');
@@ -38,26 +38,21 @@ try {
   await mkdir(sourceDir, { recursive: true });
   await mkdir(svgDir, { recursive: true });
   if (pngDirectory) await mkdir(pngDirectory, { recursive: true });
-  await page.setContent('<!doctype html><html lang="es"><meta charset="utf-8"><body style="margin:0"><main></main></body></html>');
+  await page.setContent('<!doctype html><html lang="es"><meta charset="utf-8"><body style="margin:0;background:white"><main></main></body></html>');
   await page.addScriptTag({ path: resolve(mermaidBundle) });
   await page.evaluate(() => {
     globalThis.mermaid.initialize({
       startOnLoad: false,
       securityLevel: 'strict',
       htmlLabels: false,
-      theme: 'base',
-      themeVariables: {
-        background: '#ffffff', primaryColor: '#F5EDE0', primaryTextColor: '#302237',
-        primaryBorderColor: '#591C37', secondaryColor: '#FBF7F0',
-        tertiaryColor: '#F8E9CF', lineColor: '#591C37',
-        fontFamily: 'Arial, sans-serif', fontSize: '14px',
-        noteBkgColor: '#F8E9CF', noteTextColor: '#302237', noteBorderColor: '#591C37'
-      },
+      theme: 'neutral',
+      fontFamily: 'Arial, sans-serif',
+      themeVariables: { noteBkgColor: '#ffffff', noteTextColor: '#000000', noteBorderColor: '#555555' },
       flowchart: { useMaxWidth: false, htmlLabels: false, nodeSpacing: 23, rankSpacing: 32, padding: 12 },
       class: { useMaxWidth: false, hideEmptyMembersBox: true },
       sequence: {
         useMaxWidth: false, mirrorActors: false, wrap: true,
-        width: 124, height: 48, actorMargin: 30, boxMargin: 7, messageMargin: 15,
+        width: 142, height: 65, actorMargin: 30, boxMargin: 7, messageMargin: 15,
         messageFontSize: 13, noteFontSize: 12
       }
     });
@@ -68,19 +63,34 @@ try {
     try {
       const { svg, viewBox, diagramType } = await page.evaluate(async ({ id, source }) => {
         const { diagramType } = await globalThis.mermaid.parse(source);
-        const { svg } = await globalThis.mermaid.render('fiavl-' + id, source);
-        document.querySelector('main').innerHTML = svg;
+        const result = await globalThis.mermaid.render('fiavl-' + id, source);
+        document.querySelector('main').innerHTML = result.svg;
         const diagram = document.querySelector('main svg');
         if (!diagram || !diagram.viewBox.baseVal.width) throw new Error('SVG vacío');
-        diagram.style.display = 'block';
-        return { svg, viewBox: diagram.getAttribute('viewBox'), diagramType };
+        const original = diagram.viewBox.baseVal;
+        for (const lifeline of diagram.querySelectorAll('line.actor-line')) {
+          lifeline.setAttribute('y2', original.y + original.height - 10);
+        }
+        const drawn = diagram.getBBox();
+        if (!drawn.width || !drawn.height) throw new Error('El dibujo no tiene extensión');
+        const pad = 12;
+        const left = Math.floor(Math.min(original.x, drawn.x) - pad);
+        const top = Math.floor(Math.min(original.y, drawn.y) - pad);
+        const width = Math.ceil(Math.max(original.x + original.width, drawn.x + drawn.width) + pad - left);
+        const height = Math.ceil(Math.max(original.y + original.height, drawn.y + drawn.height) + pad - top);
+        const viewBox = [left, top, width, height].join(' ');
+        diagram.setAttribute('viewBox', viewBox);
+        diagram.setAttribute('width', width);
+        diagram.setAttribute('height', height);
+        diagram.setAttribute('style', 'display:block;background:white;filter:grayscale(1)');
+        return { svg: new XMLSerializer().serializeToString(diagram), viewBox, diagramType };
       }, { id, source });
       await writeFile(resolve(sourceDir, id + '.mmd'), source);
       await writeFile(resolve(svgDir, id + '.svg'), svg + '\n');
       if (pngDirectory) {
         const [, , width, height] = viewBox.split(/\s+/).map(Number);
         await page.setViewportSize({ width: Math.ceil(width), height: Math.ceil(height) });
-        await page.locator('main svg').screenshot({ path: resolve(pngDirectory, id + '.png') });
+        await page.locator('main svg').screenshot({ path: resolve(pngDirectory, id + '.png'), animations: 'disabled' });
       }
       console.log([id, diagramType, viewBox].join('\t'));
     } catch (error) {

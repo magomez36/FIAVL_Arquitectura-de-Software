@@ -7,12 +7,16 @@ El diagrama muestra la topología local reproducible. El navegador y los dos pro
 <!-- diagram: FIS-01 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart TB
-  subgraph HOST["Computadora anfitriona · entorno local"]
+  subgraph HOST["Computadora anfitriona"]
     direction TB
     BOOT["fiavl.cmd → bootstrap.ps1<br/>runtime, npm ci y db:seed"]
-    subgraph B["Navegador · origen http://127.0.0.1:5173"]
-      APP["React, Router y JS/CSS"]
+    subgraph B["Navegador"]
+      APP["React, Router y JS/CSS<br/>Origen 127.0.0.1:5173"]
       LS[("localStorage del origen")]
       APP --> LS
     end
@@ -35,8 +39,6 @@ flowchart TB
     API -.->|entrada compilada opcional| HTTP
     MIG -.->|"carga al arrancar / imports"| HTTP
   end
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237,stroke-width:2px
-  class APP,VITE,HTTP,FILE accent
 ```
 
 | Entorno | Arranque y artefactos |

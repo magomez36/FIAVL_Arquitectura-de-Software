@@ -5,6 +5,10 @@
 <!-- diagram: ACTV-05 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> E["Elegir puntuación y escribir comentario opcional"]
   E --> C{"¿Cumple el esquema en el navegador?"}
@@ -23,8 +27,6 @@ flowchart TD
   Q -->|Sí| A["Confirmar y disparar lectura del resumen"] --> F([Fin])
   X -->|Corregir o reintentar| E
   X -->|Salir| F
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,C,B,M,Q accent
 ```
 
 Las salidas de los rombos llevan condiciones y los nodos redondeados delimitan el inicio y el fin de la actividad. [apps/web/src/features/opiniones/index.tsx](../../../../apps/web/src/features/opiniones/index.tsx), [apps/api/src/features/feedback.ts](../../../../apps/api/src/features/feedback.ts), [apps/api/src/services/feedback.ts](../../../../apps/api/src/services/feedback.ts), [tests/feedback.test.ts](../../../../tests/feedback.test.ts).

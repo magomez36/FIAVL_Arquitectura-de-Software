@@ -5,6 +5,10 @@
 <!-- diagram: ACTV-01 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> S0["Leer IDs guardados del navegador"]
   S0 --> R["Solicitar eventos y sedes"]
@@ -25,8 +29,6 @@ flowchart TD
   H --> O
   T --> O
   O -->|Salir| F
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,C,O,W,S accent
 ```
 
 Las salidas de los rombos llevan condiciones y los nodos redondeados delimitan el inicio y el fin de la actividad. [apps/web/src/features/mi-agenda/index.tsx](../../../../apps/web/src/features/mi-agenda/index.tsx), [apps/web/src/features/mi-agenda/logic.ts](../../../../apps/web/src/features/mi-agenda/logic.ts), [tests/spec-05.test.ts](../../../../tests/spec-05.test.ts).

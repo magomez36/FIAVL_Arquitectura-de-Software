@@ -1,3 +1,7 @@
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> R["Tomar referencia guardada o manual"]
   R --> X{"¿Entrada manual vacía?"}
@@ -18,5 +22,3 @@ flowchart TD
   L -.->|Excepción antes de confirmar| Y
   B -.->|Fallo al abrir| O["500"] --> F
   Y --> F
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,X,V,Q accent

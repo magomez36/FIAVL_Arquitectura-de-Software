@@ -5,6 +5,13 @@ Escenario técnico complementario de [CU-12](CU-12-reservar-plazas.md). Las refe
 <!-- diagram: TEC-01 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+  sequence:
+    height: 96
+    width: 145
+---
 sequenceDiagram
 actor A as Cliente A
 actor B as Cliente B

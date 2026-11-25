@@ -1,35 +1,69 @@
-# Validación documental y de renderizado
+# Validación documental y visual
 
-**Referencia del código** `ff11546da61896fc7f6d363f63ebb793aed2f3ea`. La verificación es una autovalidación de documentos, diagramas y exportaciones. La referencia para comportamiento en ejecución es el código versionado, junto con las pruebas localizadas y las evidencias históricas de cada spec.
+## 1. Resultado
 
-| Comprobación | Procedimiento | Resultado |
-|---|---|---|
-| Base integrada | `git status`, remoto, `git fetch origin --prune`, comparación de refs y `git log --first-parent origin/main`. Revisión de los módulos registrados en `features/index.ts`. | Diez merges y nueve rutas activas más la portada. La rama documental se creó desde `main` limpio y sincronizado. |
-| Corrección arquitectónica | Contraste dirigido de contratos, migraciones, repositorios, servicios, composición, UI, configuración, scripts y pruebas. | Cinco vistas, siete tipos de diagrama, roles reales, multiplicidades, persistencias y topología local. La matriz cubre las diez specs. |
-| Escenarios y secuencias | Revisión de los objetivos y comprobación reproducible de correspondencia por ID. | 22 casos ordinarios con una secuencia cada uno. TEC-01 amplía CU-12 y modela concurrencia y serialización. |
-| Sintaxis y recursos | Mermaid JS 11.12.2, renderizado en Chromium mediante Playwright. Cada bloque canónico se analizó y exportó a SVG y PNG a escala 2. | 33 diagramas analizados y 33 exportaciones por formato. Los archivos `.mmd` se extrajeron de los bloques Markdown. |
-| Legibilidad | Lectura de archivos y comprobación visual dirigida del material renderizado. Se redujo el ancho de componentes y paquetes, y se corrigió un bloque `opt` sin cierre detectado por Mermaid en CU-11. | Los SVG permiten ampliar las figuras extensas. La copia Markdown mantiene bloques Mermaid con sintaxis estándar para GitHub. |
-| Enlaces y trazabilidad | `node docs/architecture/tools/verify.mjs`, comprobación de archivos y anclas locales, distribución, duplicados, sincronización de MMD y correspondencia académica. | 33 figuras, 22 casos, 10 specs y 42 archivos Markdown verificados. |
-| Borrador académico | Chromium imprimió el Markdown con los 33 SVG. PDF.js rasterizó las páginas y verificó encabezados y márgenes. Se revisaron las hojas de contacto y las figuras de mayor densidad. | 38 páginas y 33 figuras. Se fijaron tamaños A3 y A2 para las figuras que requieren más espacio y se corrigió el salto que dividía las más altas. |
-| Herramientas documentales | ESLint aplicado al directorio documental de scripts. | Salida 0. |
-| Perímetro | `git diff --check` y revisión del listado de rutas del diff contra `origin/main`. | La entrega se concentra en `docs/architecture.md` y `docs/architecture/`. |
+El modelo corresponde al código `ff11546da61896fc7f6d363f63ebb793aed2f3ea`. Esta revisión conserva los 22 casos de uso y los 33 diagramas. Los cambios de los modelos se limitan a presentación, separación de rótulos y distribución de etiquetas.
 
-## Reproducción
+| Comprobación | Resultado |
+|---|---|
+| Originales Mermaid | 33 bloques canónicos analizados y renderizados con Mermaid 11.12.2 y Chromium. El tema `neutral` reemplaza las paletas personalizadas. |
+| Sincronización | 33 MMD coinciden con sus bloques. Las 33 exportaciones SVG y las 33 PNG se regeneraron desde la misma fuente. `verify.mjs` comprobó inventario y enlaces relativos. |
+| Markdown académico | Las 33 imágenes se referencian como archivos PNG locales con el ID correspondiente en el texto alternativo y en el título numerado. |
+| PDF sin conexión | Chromium generó el PDF desde el Markdown con red bloqueada. Los 33 PNG se incrustaron como objetos de imagen. PDF.js comprobó dimensiones y coincidencia RGB píxel por píxel con el PNG original. |
+| Render efectivo | Se rasterizaron las 37 páginas a 144 ppp. El verificador localizó la región ocupada por cada objeto de imagen, comprobó proporción y márgenes, y comparó el contenido rasterizado global y por franjas con su PNG. También comprobó el orden y la numeración de páginas. |
+| Inspección visual | Se revisaron los 33 recortes del PDF agrupados en láminas de cuatro. Las figuras están completas y legibles. Se corrigieron las colisiones iniciales de CU-02 y TEC-01 y los rótulos envueltos en FIS-01 y ESC-01. |
+| Formato | Texto negro, papel blanco, figuras en grises y títulos numerados. La maquetación elige A4 primero y usa formatos mayores cuando hace falta preservar el tamaño de los textos. |
 
-Desde la raíz de un checkout con las dependencias de trabajo y Chromium de Playwright disponibles, prepara Mermaid fuera del repositorio. El paquete usado para transformar el Markdown académico es `marked`, instalado en ese mismo entorno temporal. Los scripts documentales reciben rutas de módulos explícitas.
+El [Markdown académico](academico/FIAVL_Arquitectura_4plus1.md) y el [PDF](academico/FIAVL_Arquitectura_4plus1.pdf) presentan el mismo contenido. Las hojas de contacto cubren todas las páginas. [1–9](academico/validacion/contacto-1.png) · [10–18](academico/validacion/contacto-2.png) · [19–27](academico/validacion/contacto-3.png) · [28–36](academico/validacion/contacto-4.png) · [37](academico/validacion/contacto-5.png).
+
+## 2. Registro de figuras
+
+| Diagrama | Página | Revisión visual |
+|---|---:|---|
+| LOG-01 | 3 | Completo y legible |
+| DES-01 | 4 | Completo y legible |
+| DES-02 | 5 | Completo y legible |
+| CU-01 | 6 | Completo y legible |
+| CU-02 | 7 | Completo y legible |
+| CU-03 | 8 | Completo y legible |
+| CU-04 | 9 | Completo y legible |
+| CU-05 | 10 | Completo y legible |
+| CU-06 | 11 | Completo y legible |
+| CU-07 | 12 | Completo y legible |
+| CU-08 | 13 | Completo y legible |
+| CU-09 | 14 | Completo y legible |
+| CU-10 | 15 | Completo y legible |
+| CU-11 | 16 | Completo y legible |
+| CU-12 | 17 | Completo y legible |
+| CU-13 | 18 | Completo y legible |
+| CU-14 | 19 | Completo y legible |
+| CU-15 | 20 | Completo y legible |
+| CU-16 | 21 | Completo y legible |
+| CU-17 | 22 | Completo y legible |
+| CU-18 | 23 | Completo y legible |
+| CU-19 | 24 | Completo y legible |
+| CU-20 | 25 | Completo y legible |
+| CU-21 | 26 | Completo y legible |
+| CU-22 | 27 | Completo y legible |
+| TEC-01 | 28 | Completo y legible |
+| ACTV-01 | 29 | Completo y legible |
+| ACTV-02 | 30 | Completo y legible |
+| ACTV-03 | 31 | Completo y legible |
+| ACTV-04 | 32 | Completo y legible |
+| ACTV-05 | 33 | Completo y legible |
+| FIS-01 | 34 | Completo y legible |
+| ESC-01 | 35 | Completo y legible |
+
+## 3. Reproducción
+
+Con Chromium de Playwright y los módulos Mermaid 11.12.2, `marked` y PDF.js 5.4.624 disponibles en un directorio temporal, ejecuta desde la raíz:
 
 ```powershell
 $renderDeps = Join-Path $env:TEMP 'fiavl-4plus1-mermaid'
-npm.cmd install --prefix $renderDeps --no-audit --no-fund --ignore-scripts mermaid@11.12.2
 node docs/architecture/tools/render.mjs "$renderDeps/node_modules/mermaid/dist/mermaid.min.js" node_modules/playwright/index.mjs docs/architecture/rendered/png
 node docs/architecture/tools/verify.mjs
 node docs/architecture/tools/academic-pdf.mjs "$renderDeps/node_modules/marked/lib/marked.esm.js" node_modules/playwright/index.mjs
-npm.cmd install --prefix $renderDeps --no-audit --no-fund --ignore-scripts pdfjs-dist@5.4.624
-node docs/architecture/tools/verify-pdf.mjs "$renderDeps/node_modules" "$renderDeps/pdf-qa"
+node docs/architecture/tools/verify-pdf.mjs "$renderDeps/node_modules" "$renderDeps/pdf-qa-monocromo" docs/architecture/academico/validacion
 ```
 
-Los bloques con marcador `<!-- diagram: ID -->` son la fuente canónica. `render.mjs` escribe las copias en `diagrams/`, `rendered/svg/` y la carpeta PNG indicada. `verify.mjs` valida la sincronización de los originales y la cobertura de los recursos. Las exportaciones pueden variar levemente según Chromium y las fuentes del anfitrión. El visor GitHub aplica sus propios estilos. [Inventario con rutas](analysis/04-inventario-diagramas.md), [documento académico](academico/FIAVL_Arquitectura_4plus1.md).
-
-## Alcance
-
-Las pruebas de aplicación citadas se identificaron en el repositorio. Su ejecución local completa pertenece a la validación del software y los resultados de CI se registran en el Pull Request. Las comprobaciones de esta fase se centran en coherencia del modelo, sintaxis, referencias y legibilidad. Las diferencias entre especificaciones, evidencias históricas y comportamiento actual quedan en [hallazgos](analysis/05-hallazgos-y-limitaciones.md).
+`verify-pdf.mjs` deja en la carpeta temporal las páginas rasterizadas, los recortes y el inventario JSON. La inspección visual se realiza sobre esos recortes. El inventario general enlaza cada fuente canónica y sus exportaciones. [Inventario general](analysis/04-inventario-diagramas.md).

@@ -1,3 +1,7 @@
+---
+config:
+  theme: neutral
+---
 flowchart TD
   I([Inicio]) --> U["Validar selección y cantidad en UI"]
   U --> Q{"¿Entrada local utilizable?"}
@@ -23,5 +27,3 @@ flowchart TD
   Z -.->|Excepción| Y
   C -.->|Excepción| Y
   Y --> F
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237
-  class I,F,Q,G,J,D,K accent

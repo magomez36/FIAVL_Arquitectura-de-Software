@@ -5,6 +5,10 @@
 <!-- diagram: CU-22 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+---
 sequenceDiagram
 actor V as Visitante
 participant U as Summary

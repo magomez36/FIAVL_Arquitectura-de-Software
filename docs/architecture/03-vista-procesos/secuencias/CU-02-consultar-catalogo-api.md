@@ -5,6 +5,13 @@
 <!-- diagram: CU-02 -->
 
 ```mermaid
+---
+config:
+  theme: neutral
+  sequence:
+    height: 96
+    width: 145
+---
 sequenceDiagram
 actor T as Integrante técnico
 participant A as Express

@@ -1,3 +1,7 @@
+---
+config:
+  theme: neutral
+---
 flowchart TB
   subgraph W["Presentación · navegador"]
     direction TB
@@ -29,5 +33,3 @@ flowchart TB
   CLIENT ==>|"HTTP /api · JSON"| HT
   W -.->|"importa esquemas y tipos"| Z
   B -.->|"importa esquemas y tipos"| Z
-  classDef accent fill:#F5EDE0,stroke:#591C37,color:#302237,stroke-width:2px
-  class Z,CLIENT,HT,DB,LS accent
